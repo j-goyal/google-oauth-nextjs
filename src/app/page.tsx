@@ -3,28 +3,28 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Link from "next/link";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export default function HomePage() {
+  const userLogged = useAuthStore((state) => state.userLogged);
   return (
     <div className="flex flex-col min-h-screen relative overflow-hidden">
       <Header />
       <main className="flex-1 bg-gradient-to-br from-indigo-100 to-pink-100 relative z-10">
         {/* Hero Section */}
         <section className="flex flex-col items-center justify-center text-center px-6 py-20 relative z-10">
-            <h1 className="text-5xl font-extrabold text-gray-800 leading-tight mb-4">
-              Welcome to{" "}
-              <span className="text-indigo-600">GoogleOAuth</span>
-            </h1>
-            <p className="text-gray-600 text-lg mb-8">
-              A beautiful app template with Google Sign-In using Next.js and
-              Tailwind CSS.
-            </p>
-            <Link
-              href="/sign-in"
-              className="inline-block bg-indigo-600 text-white px-6 py-3 rounded-xl shadow-md hover:bg-indigo-700 transition"
-            >
-              Get Started
-            </Link>
+          <h1 className="text-5xl font-extrabold text-gray-800 leading-tight mb-4">
+            Welcome to <span className="text-indigo-600">GoogleOAuth</span>
+          </h1>
+          <p className="text-gray-600 text-lg mb-8">
+            A sleek authentication login experience with Google Sign-In.
+          </p>
+          <Link
+            href={userLogged.isAuthenticated ? "/dashboard" : "/sign-in"}
+            className="inline-block bg-indigo-600 text-white px-6 py-3 rounded-xl shadow-md hover:bg-indigo-700 transition"
+          >
+            {userLogged.isAuthenticated ? "Go to Dashboard" : "Get Started"}
+          </Link>
         </section>
 
         {/* Features Section */}
@@ -110,10 +110,12 @@ export default function HomePage() {
             Ready to Get Started?
           </h2>
           <Link
-            href="/sign-in"
+            href={userLogged.isAuthenticated ? "/dashboard" : "/sign-in"}
             className="inline-block bg-indigo-600 text-white px-6 py-3 rounded-xl shadow-md hover:bg-indigo-700 transition"
           >
-            Sign In with Google
+            {userLogged.isAuthenticated
+              ? "Go to Dashboard"
+              : "Sign In with Google"}
           </Link>
         </section>
       </main>

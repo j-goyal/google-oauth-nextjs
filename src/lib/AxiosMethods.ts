@@ -7,7 +7,6 @@ class AxiosMethods {
     } else {
       sessionStorage.setItem("token", token);
     }
-    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   };
 
   getToken = () => {

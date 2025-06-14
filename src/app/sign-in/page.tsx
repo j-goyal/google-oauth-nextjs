@@ -1,14 +1,22 @@
 "use client";
 
 import { GoogleLogin } from "@react-oauth/google";
-//import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useAuthStore } from "@/store/useAuthStore";
+import toast from "react-hot-toast";
+import { useEffect } from "react";
 
 export default function SignInPage() {
-  //const router = useRouter();
-  const login = useAuthStore((state) => state.login);
+  const router = useRouter();
+  const { userLogged, login } = useAuthStore();
+
+  useEffect(() => {
+    if (userLogged.isAuthenticated) {
+      router.replace("/dashboard");
+    }
+  }, [userLogged.isAuthenticated]);
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-purple-100 via-pink-100 to-yellow-100">
@@ -28,13 +36,14 @@ export default function SignInPage() {
               onSuccess={async (credentialResponse) => {
                 const idToken = credentialResponse.credential;
                 if (!idToken) {
-                  console.error("No credential returned from Google");
+                  toast.error("No credential returned from Google");
                   return;
                 }
                 await login(idToken);
+                router.replace("/dashboard");
               }}
               onError={() => {
-                console.log("Google Login Failed");
+                toast.error("Google Login Failed");
               }}
             />
           </div>

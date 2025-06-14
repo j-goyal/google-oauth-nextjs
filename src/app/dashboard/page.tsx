@@ -1,0 +1,89 @@
+"use client";
+
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import { useAuthStore } from "@/store/useAuthStore";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import Image from "next/image";
+
+export default function DashboardPage() {
+  const { userLogged, logout } = useAuthStore();
+
+  return (
+    <ProtectedRoute>
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-indigo-100 via-pink-100 to-yellow-100">
+        <Header />
+
+        <main className="flex-1 pt-20 pb-10 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden p-6">
+            {/* Header Section */}
+            <div className="flex justify-between items-center border-b pb-4 mb-6">
+              <div>
+                <h1 className="text-3xl font-bold text-gray-800">
+                  Welcome, {userLogged.name} 👋
+                </h1>
+                <p className="text-sm text-gray-500">
+                  Here’s your dashboard overview
+                </p>
+              </div>
+              {userLogged.profilePic && (
+                <Image
+                  src={userLogged.profilePic}
+                  alt="Profile"
+                  width={64}
+                  height={64}
+                  className="w-16 h-16 rounded-full border-2 border-indigo-300 shadow-md"
+                />
+              )}
+            </div>
+
+            {/* Info Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 p-6">
+              <div className="p-5 rounded-xl bg-indigo-100 text-indigo-800 shadow-md">
+                <h3 className="font-semibold text-lg mb-1">Your Email</h3>
+                <p className="text-sm">{userLogged.email}</p>
+              </div>
+              <div className="p-5 rounded-xl bg-yellow-100 text-yellow-800 shadow-md">
+                <h3 className="font-semibold text-lg mb-1">Your Role</h3>
+                <p className="text-sm capitalize">{userLogged.role}</p>
+              </div>
+            </div>
+
+            {/* Stats Section */}
+            <div className="px-6 py-4">
+              <h2 className="text-xl font-semibold text-gray-700 mb-4">
+                Quick Stats
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="bg-indigo-50 p-4 rounded-xl shadow text-center">
+                  <p className="text-3xl font-bold text-indigo-600">✔️</p>
+                  <p className="text-sm mt-2 text-gray-600">Signed In</p>
+                </div>
+                <div className="bg-pink-50 p-4 rounded-xl shadow text-center">
+                  <p className="text-3xl font-bold text-pink-600">🕒</p>
+                  <p className="text-sm mt-2 text-gray-600">Session Active</p>
+                </div>
+                <div className="bg-yellow-50 p-4 rounded-xl shadow text-center">
+                  <p className="text-3xl font-bold text-yellow-600">🛠️</p>
+                  <p className="text-sm mt-2 text-gray-600">
+                    More Features Soon
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="text-center mt-8">
+              <button
+                onClick={logout}
+                className="mt-6 px-6 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl shadow cursor-pointer"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </main>
+
+        <Footer />
+      </div>
+    </ProtectedRoute>
+  );
+}

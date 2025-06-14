@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import axios from "@/lib/AxiosMethods";
 import { ManageAuth } from "@/services/ManageAuth.module";
 import { toast } from "react-hot-toast";
@@ -30,35 +31,45 @@ const initialUserState: CurrentUser = {
 
 const authService = ManageAuth();
 
-export const useAuthStore = create<AuthState>((set) => ({
-  userLogged: initialUserState,
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      userLogged: initialUserState,
 
-  login: async (idToken) => {
-    try {
-      const response = await authService.loginWithGoogle({ idToken });
+      login: async (idToken) => {
+        try {
+          const response = await authService.loginWithGoogle({ idToken });
 
-      if (!response.success) {
-        throw new Error(getErrorMessage(response.error));
-      }
+          if (!response.success) {
+            throw new Error(getErrorMessage(response.error));
+          }
 
-      const { token, ...userData } = response.data;
-      axios.setToken(token);
+          const { token, ...userData } = response.data;
+          axios.setToken(token); // store token in local/session storage only
 
-      set({ userLogged: { ...userData, isAuthenticated: true } });
+          set({ userLogged: { ...userData, isAuthenticated: true } });
 
-      toast.success("Successfully logged in");
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        toast.error(err.message);
-      } else {
-        toast.error("Something went wrong while logging in.");
-      }
+          toast.success("Successfully logged in");
+        } catch (err: unknown) {
+          if (err instanceof Error) {
+            toast.error(err.message);
+          } else {
+            toast.error("Something went wrong while logging in.");
+          }
+        }
+      },
+
+      logout: () => {
+        axios.removeToken();
+        set({ userLogged: initialUserState });
+        toast.success("Logged out successfully");
+      },
+    }),
+    {
+      name: "auth-storage",
+      partialize: (state) => ({
+        userLogged: state.userLogged,
+      }),
     }
-  },
-
-  logout: () => {
-    axios.removeToken();
-    set({ userLogged: initialUserState });
-    toast.success("Logged out successfully");
-  },
-}));
+  )
+);
