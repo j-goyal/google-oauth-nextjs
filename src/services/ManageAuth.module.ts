@@ -1,17 +1,19 @@
 import axios from "@/lib/AxiosMethods";
 import { GoogleAuthRequest } from "@/types/auth/GoogleAuthRequest";
 
-function loginWithGoogle(payload: GoogleAuthRequest) {
-  return axios.postData("/api/v1/auth/google", payload);
-}
-
-function getProfile() {
-  return axios.getData("/api/v1/auth/profile");
-}
-
 export const ManageAuth = () => {
+  const loginWithGoogle = (payload: GoogleAuthRequest) =>
+    axios.postData("/api/v1/auth/google", payload);
+
+  const getCurrentUser = () =>
+    axios.getData("/api/v1/auth/me");
+
+  const deleteCurrentUser = () =>
+    axios.deleteData("/api/v1/auth/me");
+
   return {
     loginWithGoogle,
-    getProfile,
+    getCurrentUser,
+    deleteCurrentUser,
   };
 };

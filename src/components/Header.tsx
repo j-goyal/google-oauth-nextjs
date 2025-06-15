@@ -5,10 +5,16 @@ import { Menu } from "lucide-react";
 import Link from "next/link";
 import { useAuthStore } from "@/store/useAuthStore";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const { userLogged, logout } = useAuthStore();
+  const router = useRouter();
+  const handleLogout = () => {
+    logout();
+    router.push("/");
+  };
 
   return (
     <header className="bg-white shadow-md top-0 w-full sticky z-50">
@@ -42,7 +48,7 @@ export default function Header() {
                 />
               )}
               <button
-                onClick={logout}
+                onClick={handleLogout}
                 className="text-sm text-red-600 hover:underline cursor-pointer"
               >
                 Logout
@@ -83,6 +89,7 @@ export default function Header() {
                   onClick={() => {
                     logout();
                     setIsOpen(false);
+                    router.push("/")
                   }}
                   className="text-sm text-red-600 hover:underline cursor-pointer"
                 >

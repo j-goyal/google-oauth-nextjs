@@ -18,6 +18,10 @@ interface AuthState {
   userLogged: CurrentUser;
   login: (idToken: string) => Promise<void>;
   logout: () => void;
+  deleteAccount: () => Promise<boolean>;
+  setUser: (userData: Partial<CurrentUser>) => void;
+  resetUser: () => void;
+  verifyTokenOnLoad: () => Promise<void>;
 }
 
 const initialUserState: CurrentUser = {
@@ -33,7 +37,7 @@ const authService = ManageAuth();
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       userLogged: initialUserState,
 
       login: async (idToken) => {
@@ -60,10 +64,56 @@ export const useAuthStore = create<AuthState>()(
       },
 
       logout: () => {
-        axios.removeToken();
-        set({ userLogged: initialUserState });
+        get().resetUser();
         toast.success("Logged out successfully");
       },
+
+      deleteAccount: async () => {
+        try {
+          await authService.deleteCurrentUser();
+          get().resetUser();
+          toast.success("Account deleted successfully");
+          return true;
+        } catch (err: unknown) {
+          toast.error(
+            err instanceof Error
+              ? err.message
+              : "Something went wrong while deleting the account."
+          );
+          return false;
+        }
+      },
+
+      verifyTokenOnLoad: async () => {
+        const token = axios.getToken();
+
+        if (!token) {
+          set({ userLogged: { ...initialUserState } });
+          return;
+        }
+
+        try {
+          const response = await authService.getCurrentUser();
+          set({ userLogged: { ...response.data, isAuthenticated: true } });
+        } catch {
+          axios.removeToken();
+          set({ userLogged: { ...initialUserState } });
+        }
+      },
+
+      resetUser: () => {
+        set({ userLogged: { ...initialUserState } });
+        axios.removeToken();
+      },
+
+      setUser: (userData: Partial<CurrentUser>) =>
+        set((state) => ({
+          userLogged: {
+            ...state.userLogged,
+            ...userData,
+            isAuthenticated: true,
+          },
+        })),
     }),
     {
       name: "auth-storage",

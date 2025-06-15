@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useAuthStore } from "@/store/useAuthStore";
 
 export default function HomePage() {
-  const userLogged = useAuthStore((state) => state.userLogged);
+  const userLogged = useAuthStore(state=> state.userLogged);
   return (
     <div className="flex flex-col min-h-screen relative overflow-hidden">
       <Header />
