@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
 import { ManageAuth } from "@/services/ManageAuth.module";
+import AxiosMethods from "@/lib/AxiosMethods";
 
 interface Props {
   children: React.ReactNode;
@@ -20,6 +21,11 @@ export default function AuthLayout({ children }: Props) {
   useEffect(() => {
     const verify = async () => {
       try {
+        const storedToken = AxiosMethods.getToken();
+        if(!storedToken){
+          resetUser();
+          router.replace("/sign-in")
+        }
         const res = await authService.getCurrentUser();
         if (res.success) {
           setUser({ ...res.data, isAuthenticated: true });
