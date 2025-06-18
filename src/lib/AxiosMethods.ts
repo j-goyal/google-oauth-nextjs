@@ -28,9 +28,9 @@ class AxiosMethods {
     }
   };
 
-  postData = async (url: string, payload?: unknown) => {
+  postData = async (url: string, payload?: unknown, config?: object) => {
     try {
-      const response = await axios.post(url, payload);
+      const response = await axios.post(url, payload, config);
       return response?.data;
     } catch (error) {
       throw error;
