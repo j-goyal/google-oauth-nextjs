@@ -48,8 +48,8 @@ export const useAuthStore = create<AuthState>()(
             throw new Error(getErrorMessage(response.error));
           }
 
-          const { token, ...userData } = response.data;
-          axios.setToken(token); // store token in local/session storage only
+          const { token,tokenExpiresAt, refreshTokenExpiresAt, ...userData } = response.data;
+          axios.setToken(token, tokenExpiresAt, refreshTokenExpiresAt);
 
           set({ userLogged: { ...userData, isAuthenticated: true } });
 

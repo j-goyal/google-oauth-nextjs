@@ -1,11 +1,23 @@
 import axios from "./axios";
 
 class AxiosMethods {
-  setToken = (token: string, remember: boolean = true) => {
+  setToken = (
+    token: string,
+    tokenExpiresAt?: string,
+    refreshTokenExpiresAt?: string,
+    remember: boolean = true
+  ) => {
     if (remember) {
       localStorage.setItem("token", token);
-    } else {
-      sessionStorage.setItem("token", token);
+    }
+    sessionStorage.setItem("token", token);
+
+    if (tokenExpiresAt) {
+      localStorage.setItem("tokenExpiresAt", tokenExpiresAt);
+    }
+
+    if (refreshTokenExpiresAt) {
+      localStorage.setItem("refreshTokenExpiresAt", refreshTokenExpiresAt);
     }
   };
 
