@@ -1,22 +1,45 @@
 "use client";
 
-import { GoogleLogin } from "@react-oauth/google";
 import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useAuthStore } from "@/store/useAuthStore";
-import toast from "react-hot-toast";
 import { useEffect } from "react";
 
 export default function SignInPage() {
   const router = useRouter();
-  const { userLogged, login } = useAuthStore();
-
+  const { userLogged } = useAuthStore();
+  
   useEffect(() => {
     if (userLogged.isAuthenticated) {
       router.replace("/dashboard");
     }
-  }, [userLogged.isAuthenticated]);
+    const script = document.createElement("script");
+    script.src = "https://accounts.google.com/gsi/client";
+    script.async = true;
+    script.defer = true;
+    script.onload = () => {
+    };
+    document.head.appendChild(script);
+
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, [userLogged.isAuthenticated, router]);
+
+  const handleGoogleSignInRedirect = () => {
+    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+    const redirectUri = `${window.location.origin}/callback`;
+
+    const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
+      `client_id=${clientId}&` +
+      `redirect_uri=${encodeURIComponent(redirectUri)}&` +
+      `response_type=id_token&` +
+      `scope=openid%20profile%20email&` +
+      `nonce=${Math.random().toString(36).substring(2, 15)}`;
+
+    window.location.href = googleAuthUrl;
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-purple-100 via-pink-100 to-yellow-100">
@@ -32,20 +55,12 @@ export default function SignInPage() {
           </p>
 
           <div className="mb-6">
-            <GoogleLogin
-              onSuccess={async (credentialResponse) => {
-                const idToken = credentialResponse.credential;
-                if (!idToken) {
-                  toast.error("No credential returned from Google");
-                  return;
-                }
-                await login(idToken);
-                router.replace("/dashboard");
-              }}
-              onError={() => {
-                toast.error("Google Login Failed");
-              }}
-            />
+            <button
+              onClick={handleGoogleSignInRedirect}
+              className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 ease-in-out w-full flex items-center justify-center space-x-2 cursor-pointer"
+            >
+              <span>Sign in with Google</span>
+            </button>
           </div>
 
           <ul className="text-left text-sm text-gray-600 space-y-2 mb-6">

@@ -53,7 +53,7 @@ export const useAuthStore = create<AuthState>()(
 
           set({ userLogged: { ...userData, isAuthenticated: true } });
 
-          toast.success("Successfully logged in");
+          toast.success("Successfully logged in with Google!");
         } catch (err: unknown) {
           if (err instanceof Error) {
             toast.error(err.message);

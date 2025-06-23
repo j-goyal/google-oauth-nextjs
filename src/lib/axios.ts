@@ -42,7 +42,7 @@ instance.interceptors.request.use(async (config) => {
     const tokenExpiryDate = new Date(tokenExpiresAt);
     if (now > tokenExpiryDate) {
       try {
-        const refreshResponse = await axios.post("/api/v1/auth/refresh", undefined, {
+        const refreshResponse = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/auth/refresh`, undefined, {
           withCredentials: true,
         });
 
