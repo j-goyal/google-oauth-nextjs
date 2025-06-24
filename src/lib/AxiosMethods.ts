@@ -4,16 +4,16 @@ class AxiosMethods {
   setToken = (
     token: string,
     tokenExpiresAt?: string,
-    refreshTokenExpiresAt?: string,
-    remember: boolean = true
+    refreshToken?: string,
+    refreshTokenExpiresAt?: string
   ) => {
-    if (remember) {
-      localStorage.setItem("token", token);
-    }
-    sessionStorage.setItem("token", token);
-
+    localStorage.setItem("token", token);
+  
     if (tokenExpiresAt) {
       localStorage.setItem("tokenExpiresAt", tokenExpiresAt);
+    }
+    if (refreshToken) {
+      localStorage.setItem("refreshToken", refreshToken);
     }
 
     if (refreshTokenExpiresAt) {
@@ -22,12 +22,14 @@ class AxiosMethods {
   };
 
   getToken = () => {
-    return localStorage.getItem("token") || sessionStorage.getItem("token");
+    return localStorage.getItem("token");
   };
 
   removeToken = () => {
     localStorage.removeItem("token");
-    sessionStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("tokenExpiresAt");
+    localStorage.removeItem("refreshTokenExpiresAt");
     delete axios.defaults.headers.common["Authorization"];
   };
 
@@ -40,9 +42,9 @@ class AxiosMethods {
     }
   };
 
-  postData = async (url: string, payload?: unknown, config?: object) => {
+  postData = async (url: string, payload?: unknown) => {
     try {
-      const response = await axios.post(url, payload, config);
+      const response = await axios.post(url, payload);
       return response?.data;
     } catch (error) {
       throw error;
