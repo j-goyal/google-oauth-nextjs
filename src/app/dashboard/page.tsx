@@ -8,6 +8,7 @@ import AuthLayout from "@/components/AuthLayout";
 import { useRouter } from "next/navigation";
 import ConfirmModal from "@/components/ConfirmModal";
 import { useState } from "react";
+import { USER_ROLES } from "@/constants/userRoles";
 
 export default function DashboardPage() {
   const { userLogged, logout, deleteAccount } = useAuthStore();
@@ -98,6 +99,16 @@ export default function DashboardPage() {
                   </div>
                 </div>
               </div>
+              {userLogged?.role?.toLowerCase() === USER_ROLES.ADMIN && (
+                <div className="text-center mt-6">
+                  <button
+                    onClick={() => router.push("/admin/users")}
+                    className="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-xl shadow cursor-pointer"
+                  >
+                    👥 Manage Users
+                  </button>
+                </div>
+              )}
               <div className="text-center mt-8">
                 <button
                   onClick={handleLogout}

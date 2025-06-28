@@ -88,7 +88,7 @@ export const useAuthStore = create<AuthState>()(
         const token = axios.getToken();
 
         if (!token) {
-          set({ userLogged: { ...initialUserState } });
+           get().resetUser();
           return;
         }
 
@@ -96,8 +96,7 @@ export const useAuthStore = create<AuthState>()(
           const response = await authService.getCurrentUser();
           set({ userLogged: { ...response.data, isAuthenticated: true } });
         } catch {
-          axios.removeToken();
-          set({ userLogged: { ...initialUserState } });
+          get().resetUser();
         }
       },
 
