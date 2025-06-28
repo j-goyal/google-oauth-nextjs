@@ -13,7 +13,7 @@ export default function HomePage() {
       <main className="flex-1 bg-gradient-to-br from-indigo-100 to-pink-100 relative z-10">
         {/* Hero Section */}
         <section className="flex flex-col items-center justify-center text-center px-6 py-20 relative z-10">
-          <h1 className="text-5xl font-extrabold text-gray-800 leading-tight mb-4">
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-800 leading-tight mb-4">
             Welcome to <span className="text-indigo-600">GoogleOAuth</span>
           </h1>
           <p className="text-gray-600 text-lg mb-8">

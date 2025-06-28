@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import ConfirmModal from "@/components/ConfirmModal";
 import { useState } from "react";
 import { USER_ROLES } from "@/constants/userRoles";
+import { Users } from "lucide-react";
 
 export default function DashboardPage() {
   const { userLogged, logout, deleteAccount } = useAuthStore();
@@ -100,12 +101,13 @@ export default function DashboardPage() {
                 </div>
               </div>
               {userLogged?.role?.toLowerCase() === USER_ROLES.ADMIN && (
-                <div className="text-center mt-6">
+                <div className="mt-6 flex justify-center">
                   <button
                     onClick={() => router.push("/admin/users")}
-                    className="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-xl shadow cursor-pointer"
+                    className="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-xl shadow cursor-pointer flex items-center gap-2"
                   >
-                    👥 Manage Users
+                    <Users className="h-5 w-5" />
+                    <span>View All Users</span>
                   </button>
                 </div>
               )}
