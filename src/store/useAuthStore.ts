@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import axios from "@/lib/AxiosMethods";
+import { isAxiosError } from "axios";
 import { ManageAuth } from "@/services/ManageAuth.module";
 import { toast } from "react-hot-toast";
 import { getErrorMessage } from "@/utils/getErrorMessage";
@@ -16,12 +17,15 @@ interface CurrentUser {
 
 interface AuthState {
   userLogged: CurrentUser;
-  login: (idToken: string) => Promise<void>;
+  softDeletedUserEmail?: string;
+  login: (idToken: string) => Promise<"success" | "softDeleted" | "error">;
   logout: () => void;
   deleteAccount: () => Promise<boolean>;
   setUser: (userData: Partial<CurrentUser>) => void;
   resetUser: () => void;
   verifyTokenOnLoad: () => Promise<void>;
+  clearSoftDeletedUser: () => void;
+  confirmRestoreUser: () => Promise<void>;
 }
 
 const initialUserState: CurrentUser = {
@@ -40,7 +44,7 @@ export const useAuthStore = create<AuthState>()(
     (set, get) => ({
       userLogged: initialUserState,
 
-      login: async (idToken) => {
+      login: async (idToken: string): Promise<"success" | "softDeleted" | "error"> => {
         try {
           const response = await authService.loginWithGoogle({ idToken });
 
@@ -48,17 +52,81 @@ export const useAuthStore = create<AuthState>()(
             throw new Error(getErrorMessage(response.error));
           }
 
-          const { token, encryptedRefreshToken, tokenExpiresAt, refreshTokenExpiresAt, ...userData } = response.data;
-          axios.setToken(token, tokenExpiresAt, encryptedRefreshToken, refreshTokenExpiresAt);
+          const {
+            token,
+            encryptedRefreshToken,
+            tokenExpiresAt,
+            refreshTokenExpiresAt,
+            ...userData
+          } = response.data;
+          axios.setToken(
+            token,
+            tokenExpiresAt,
+            encryptedRefreshToken,
+            refreshTokenExpiresAt
+          );
 
           set({ userLogged: { ...userData, isAuthenticated: true } });
 
-          toast.success("Successfully logged in with Google!");
+          toast.success("Successfully logged in with Google !");
+          return "success";
+        } catch (err: unknown) {
+          if (isAxiosError(err)) {
+            const backendResponse = err.response?.data;
+            if (backendResponse?.error?.details === "SOFT_DELETED_USER" && backendResponse?.data?.requiresRestore) {
+              set({
+                softDeletedUserEmail: backendResponse.data?.email,
+              });
+              return "softDeleted";
+            }
+            toast.error(getErrorMessage(backendResponse?.error));
+          } else {
+            toast.error("Something went wrong while logging in.");
+          }
+          return "error";
+        }
+      },
+
+      clearSoftDeletedUser: () => set({ softDeletedUserEmail: undefined }),
+
+      confirmRestoreUser: async () => {
+        const email = get().softDeletedUserEmail;
+        if (!email) {
+          toast.error("Email not found to restore.");
+          return;
+        }
+        try {
+          const response = await authService.confirmRestoreUser({ email });
+
+          if (!response.success) {
+            throw new Error(getErrorMessage(response.error));
+          }
+
+          const {
+            token,
+            encryptedRefreshToken,
+            tokenExpiresAt,
+            refreshTokenExpiresAt,
+            ...userData
+          } = response.data;
+
+          axios.setToken(
+            token,
+            tokenExpiresAt,
+            encryptedRefreshToken,
+            refreshTokenExpiresAt
+          );
+          set({
+            userLogged: { ...userData, isAuthenticated: true },
+            softDeletedUserEmail: undefined,
+          });
+
+          toast.success("Account restored successfully and logged in.");
         } catch (err: unknown) {
           if (err instanceof Error) {
             toast.error(err.message);
           } else {
-            toast.error("Something went wrong while logging in.");
+            toast.error("Something went wrong while restoring account.");
           }
         }
       },
@@ -88,7 +156,7 @@ export const useAuthStore = create<AuthState>()(
         const token = axios.getToken();
 
         if (!token) {
-           get().resetUser();
+          get().resetUser();
           return;
         }
 

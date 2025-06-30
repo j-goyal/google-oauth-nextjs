@@ -17,6 +17,7 @@ const refreshInstance = axios.create({
 const skipAuthUrls = [
   "/api/v1/auth/google",
   "/api/v1/auth/refresh",
+  "/api/v1/auth/google/confirm-restore",
 ];
 
 instance.interceptors.request.use(async (config) => {
