@@ -20,10 +20,45 @@ const skipAuthUrls = [
   "/api/v1/auth/google/confirm-restore",
 ];
 
+let isRefreshing = false;
+let refreshPromise: Promise<string | null> | null = null;
+
+async function refreshAccessToken(): Promise<string | null> {
+  const refreshToken = localStorage.getItem("refreshToken");
+
+  if (!refreshToken) return null;
+
+  try {
+    const response = await refreshInstance.post("/api/v1/auth/refresh", {
+      refreshToken,
+    });
+
+    if (response?.data?.success) {
+      const {
+        token: newToken,
+        tokenExpiresAt,
+        refreshTokenExpiresAt,
+        encryptedRefreshToken: newRefreshToken,
+      } = response.data.data;
+
+      localStorage.setItem("token", newToken);
+      localStorage.setItem("tokenExpiresAt", tokenExpiresAt);
+      localStorage.setItem("refreshToken", newRefreshToken);
+      localStorage.setItem("refreshTokenExpiresAt", refreshTokenExpiresAt);
+
+      return newToken;
+    } else {
+      return null;
+    }
+  } catch {
+    return null;
+  }
+}
+
 instance.interceptors.request.use(async (config) => {
   if (typeof window !== "undefined") {
     const url = config.url ?? "";
-    if (skipAuthUrls.some(skipUrl => url.includes(skipUrl))) {
+    if (skipAuthUrls.some((skipUrl) => url.includes(skipUrl))) {
       return config;
     }
     const token = localStorage.getItem("token");
@@ -59,31 +94,20 @@ instance.interceptors.request.use(async (config) => {
 
     const tokenExpiryDate = new Date(tokenExpiresAt);
     if (now > tokenExpiryDate) {
-      try {
-        const refreshResponse = await refreshInstance.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/auth/refresh`, {refreshToken: refreshToken});
+      if (!isRefreshing) {
+        isRefreshing = true;
+        refreshPromise = refreshAccessToken().finally(() => {
+          isRefreshing = false;
+        });
+      }
 
-        if (refreshResponse?.data?.success) {
-          const {
-            token: newToken,
-            tokenExpiresAt: newTokenExpiresAt,
-            refreshTokenExpiresAt: newRefreshTokenExpiresAt,
-            encryptedRefreshToken: newRefreshToken,
-          } = refreshResponse.data.data;
-
-          localStorage.setItem("token", newToken);
-          localStorage.setItem("tokenExpiresAt", newTokenExpiresAt);
-          localStorage.setItem("refreshToken", newRefreshToken);
-          localStorage.setItem("refreshTokenExpiresAt", newRefreshTokenExpiresAt);
-
-          config.headers.Authorization = `Bearer ${newToken}`;
-        } else {
-          logoutAndRedirect();
-          return config;
-        }
-      } catch {
+      const newToken = await refreshPromise;
+      if (!newToken) {
         logoutAndRedirect();
         return config;
       }
+
+      config.headers.Authorization = `Bearer ${newToken}`;
     } else {
       config.headers.Authorization = `Bearer ${token}`;
     }
