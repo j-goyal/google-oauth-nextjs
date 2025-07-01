@@ -57,7 +57,7 @@ export default function SignInPage() {
           <div className="mb-6">
             <button
               onClick={handleGoogleSignInRedirect}
-              className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 ease-in-out w-full flex items-center justify-center space-x-2 cursor-pointer"
+              className="bg-indigo-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-indigo-700 transition duration-300 ease-in-out w-full flex items-center justify-center space-x-2 cursor-pointer"
             >
               <span>Sign in with Google</span>
             </button>

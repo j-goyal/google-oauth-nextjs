@@ -43,6 +43,8 @@ export default function GoogleCallbackPage() {
         const result = await login(token);
         if (result === "success") {
           router.replace("/dashboard");
+        } else if (result === "error") {
+          router.replace("/sign-in");
         }
       } catch {
         console.error("Login failed completely.");
