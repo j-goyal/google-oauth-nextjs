@@ -1,4 +1,13 @@
 import axios from "axios";
+import toast from "react-hot-toast";
+
+const logoutAndRedirect = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("refreshToken");
+  localStorage.removeItem("tokenExpiresAt");
+  localStorage.removeItem("refreshTokenExpiresAt");
+  window.location.href = "/sign-in";
+};
 
 const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -68,14 +77,6 @@ instance.interceptors.request.use(async (config) => {
 
     const now = new Date();
 
-    const logoutAndRedirect = () => {
-      localStorage.removeItem("token");
-      localStorage.removeItem("refreshToken");
-      localStorage.removeItem("tokenExpiresAt");
-      localStorage.removeItem("refreshTokenExpiresAt");
-      window.location.href = "/sign-in";
-    };
-
     if (!refreshToken || !refreshTokenExpiresAt) {
       logoutAndRedirect();
       return config;
@@ -115,5 +116,26 @@ instance.interceptors.request.use(async (config) => {
 
   return config;
 });
+
+let hasHandledSessionExpiry = false;
+
+instance.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const status = error?.response?.status;
+    const errorDetails = error?.response?.data?.error?.details;
+    if (status === 403 && errorDetails === "SESSION_EXPIRED") {
+      if (!hasHandledSessionExpiry) {
+        hasHandledSessionExpiry = true;
+        toast.error("Session expired. Please log in again.");
+        logoutAndRedirect();
+      }
+      return Promise.reject(error);
+    }
+
+    hasHandledSessionExpiry = false;
+    return Promise.reject(error);
+  }
+);
 
 export default instance;

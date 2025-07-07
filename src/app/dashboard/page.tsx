@@ -12,12 +12,12 @@ import { USER_ROLES } from "@/constants/userRoles";
 import { Users } from "lucide-react";
 
 export default function DashboardPage() {
-  const { userLogged, logout, deleteAccount } = useAuthStore();
+  const { userLogged, deleteAccount, logoutCurrentSession } = useAuthStore();
   const router = useRouter();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async() => {
+    await logoutCurrentSession();
     router.push("/");
   };
 

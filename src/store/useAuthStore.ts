@@ -19,7 +19,9 @@ interface AuthState {
   userLogged: CurrentUser;
   softDeletedUserEmail?: string;
   login: (idToken: string) => Promise<"success" | "softDeleted" | "error">;
-  logout: () => void;
+  logoutCurrentSession: () => Promise<void>;
+  logoutAllSessions: () => Promise<void>;
+  logoutOtherSessions: () => Promise<void>;
   deleteAccount: () => Promise<boolean>;
   setUser: (userData: Partial<CurrentUser>) => void;
   resetUser: () => void;
@@ -44,7 +46,9 @@ export const useAuthStore = create<AuthState>()(
     (set, get) => ({
       userLogged: initialUserState,
 
-      login: async (idToken: string): Promise<"success" | "softDeleted" | "error"> => {
+      login: async (
+        idToken: string
+      ): Promise<"success" | "softDeleted" | "error"> => {
         try {
           const response = await authService.loginWithGoogle({ idToken });
 
@@ -73,7 +77,10 @@ export const useAuthStore = create<AuthState>()(
         } catch (err: unknown) {
           if (isAxiosError(err)) {
             const backendResponse = err.response?.data;
-            if (backendResponse?.error?.details === "SOFT_DELETED_USER" && backendResponse?.data?.requiresRestore) {
+            if (
+              backendResponse?.error?.details === "SOFT_DELETED_USER" &&
+              backendResponse?.data?.requiresRestore
+            ) {
               set({
                 softDeletedUserEmail: backendResponse.data?.email,
               });
@@ -131,9 +138,33 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
-      logout: () => {
-        get().resetUser();
-        toast.success("Logged out successfully");
+      logoutCurrentSession: async () => {
+        try {
+          await authService.logoutCurrentSession();
+          get().resetUser();
+          toast.success("Logged out from current session.");
+        } catch {
+          toast.error("Failed to log out.");
+        }
+      },
+
+      logoutAllSessions: async () => {
+        try {
+          await authService.logoutAllSessions();
+          get().resetUser();
+          toast.success("Logged out from all sessions.");
+        } catch {
+          toast.error("Failed to log out from all sessions.");
+        }
+      },
+
+      logoutOtherSessions: async () => {
+        try {
+          await authService.logoutOtherSessions();
+          toast.success("Logged out from all other sessions.");
+        } catch {
+          toast.error("Failed to log out from other sessions.");
+        }
       },
 
       deleteAccount: async () => {

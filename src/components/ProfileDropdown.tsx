@@ -7,12 +7,12 @@ import { useAuthStore } from "@/store/useAuthStore";
 
 export default function ProfileDropdown() {
   const [isOpen, setIsOpen] = useState(false);
-  const { userLogged, logout } = useAuthStore();
+  const { userLogged, logoutCurrentSession } = useAuthStore();
   const router = useRouter();
 
-  const handleLogout = () => {
+  const handleLogout = async() => {
+    await logoutCurrentSession();
     router.replace("/");
-    logout();
     setIsOpen(false);
   };
 
