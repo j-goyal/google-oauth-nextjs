@@ -5,6 +5,7 @@ import { isAxiosError } from "axios";
 import { ManageAuth } from "@/services/ManageAuth.module";
 import { toast } from "react-hot-toast";
 import { getErrorMessage } from "@/utils/getErrorMessage";
+import { ManageMe } from "@/services/ManageMe.module";
 
 interface CurrentUser {
   id: string | null;
@@ -40,6 +41,7 @@ const initialUserState: CurrentUser = {
 };
 
 const authService = ManageAuth();
+const meService = ManageMe();
 
 export const useAuthStore = create<AuthState>()(
   persist(
@@ -140,7 +142,7 @@ export const useAuthStore = create<AuthState>()(
 
       logoutCurrentSession: async () => {
         try {
-          await authService.logoutCurrentSession();
+          await meService.logoutCurrentSession();
           get().resetUser();
           toast.success("Logged out from current session.");
         } catch {
@@ -150,7 +152,7 @@ export const useAuthStore = create<AuthState>()(
 
       logoutAllSessions: async () => {
         try {
-          await authService.logoutAllSessions();
+          await meService.logoutAllSessions();
           get().resetUser();
           toast.success("Logged out from all sessions.");
         } catch {
@@ -160,7 +162,7 @@ export const useAuthStore = create<AuthState>()(
 
       logoutOtherSessions: async () => {
         try {
-          await authService.logoutOtherSessions();
+          await meService.logoutOtherSessions();
           toast.success("Logged out from all other sessions.");
         } catch {
           toast.error("Failed to log out from other sessions.");
@@ -169,7 +171,7 @@ export const useAuthStore = create<AuthState>()(
 
       deleteAccount: async () => {
         try {
-          await authService.deleteCurrentUser();
+          await meService.deleteCurrentUser();
           get().resetUser();
           toast.success("Account deleted successfully");
           return true;
@@ -192,7 +194,7 @@ export const useAuthStore = create<AuthState>()(
         }
 
         try {
-          const response = await authService.getCurrentUser();
+          const response = await meService.getCurrentUser();
           set({ userLogged: { ...response.data, isAuthenticated: true } });
         } catch {
           get().resetUser();

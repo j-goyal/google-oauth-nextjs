@@ -19,12 +19,11 @@ export default function AdminAllUsersContent() {
   const [users, setUsers] = useState<UserDto[]>([]);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const manageUsersService = ManageUsersService();
-
   const [debouncedName] = useDebounce(name, 300);
   const [debouncedEmail] = useDebounce(email, 300);
 
   useEffect(() => {
+    const manageUsersService = ManageUsersService();
     const fetchUsers = async () => {
       try {
         const response = await manageUsersService.getAllUsers();
@@ -53,7 +52,7 @@ export default function AdminAllUsersContent() {
       return matchName && matchEmail;
     });
     setUsers(filtered);
-  }, [debouncedName, debouncedEmail]);
+  }, [debouncedName, debouncedEmail, allUsers]);
 
   const columns: ColumnDef<UserDto>[] = useMemo(
     () => [

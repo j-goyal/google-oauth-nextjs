@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
-import { ManageAuth } from "@/services/ManageAuth.module";
 import AxiosMethods from "@/lib/AxiosMethods";
+import { ManageMe } from "@/services/ManageMe.module";
 
 interface Props {
   children: React.ReactNode;
@@ -16,7 +16,7 @@ export default function AuthLayout({ children }: Props) {
   const setUser = useAuthStore((s) => s.setUser);
   const resetUser = useAuthStore((s) => s.resetUser);
 
-  const authService = ManageAuth();
+  const meService = ManageMe();
 
   useEffect(() => {
     const verify = async () => {
@@ -26,7 +26,7 @@ export default function AuthLayout({ children }: Props) {
           resetUser();
           router.replace("/sign-in")
         }
-        const res = await authService.getCurrentUser();
+        const res = await meService.getCurrentUser();
         if (res.success) {
           setUser({ ...res.data, isAuthenticated: true });
           setVerified(true);
