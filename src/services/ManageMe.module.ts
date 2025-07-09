@@ -11,11 +11,14 @@ export const ManageMe = () => {
 
   const logoutOtherSessions = () => axios.postData("/api/v1/me/sessions/logout-others");
 
+  const getMyActiveSessions = () => axios.getData("api/v1/me/sessions");
+
   return {
     getCurrentUser,
     deleteCurrentUser,
     logoutCurrentSession,
     logoutAllSessions,
     logoutOtherSessions,
+    getMyActiveSessions
   };
 };

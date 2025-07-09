@@ -10,7 +10,7 @@ export default function ProfileDropdown() {
   const { userLogged, logoutCurrentSession } = useAuthStore();
   const router = useRouter();
 
-  const handleLogout = async() => {
+  const handleLogout = async () => {
     await logoutCurrentSession();
     router.replace("/");
     setIsOpen(false);
@@ -45,8 +45,9 @@ export default function ProfileDropdown() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-56 rounded-xl border border-gray-200 bg-white shadow-xl z-50">
+        <div className="absolute right-0 mt-2 w-64 rounded-xl border border-gray-200 bg-white shadow-xl z-50">
           <div className="p-4 space-y-2 text-sm text-gray-800">
+            {/* User Info */}
             <div className="flex flex-col items-center gap-1">
               {userLogged.profilePic && (
                 <Image
@@ -73,7 +74,47 @@ export default function ProfileDropdown() {
                 {userLogged.email}
               </p>
             </div>
+
             <hr className="border-t border-gray-200" />
+
+            {/* Navigation Links */}
+            <div className="flex flex-col gap-1 items-center">
+              <button
+                onClick={() => {
+                  router.push("/dashboard");
+                  setIsOpen(false);
+                }}
+                className="w-full px-1 py-1 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors cursor-pointer"
+              >
+                🧭 Dashboard
+              </button>
+
+              <button
+                onClick={() => {
+                  router.push("/sessions");
+                  setIsOpen(false);
+                }}
+                className="w-full px-1 py-1 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors cursor-pointer"
+              >
+                💻 My Sessions
+              </button>
+
+              {userLogged?.role?.toLowerCase() === "admin" && (
+                <button
+                  onClick={() => {
+                    router.push("/admin/users");
+                    setIsOpen(false);
+                  }}
+                  className="w-full px-1 py-1 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors cursor-pointer"
+                >
+                  👥 Manage Users
+                </button>
+              )}
+            </div>
+
+            <hr className="border-t border-gray-200" />
+
+            {/* Logout */}
             <button
               onClick={handleLogout}
               className="w-full text-center text-red-600 hover:text-red-700 hover:underline transition cursor-pointer"

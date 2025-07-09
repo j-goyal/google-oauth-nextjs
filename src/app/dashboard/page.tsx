@@ -16,7 +16,7 @@ export default function DashboardPage() {
   const router = useRouter();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const handleLogout = async() => {
+  const handleLogout = async () => {
     await logoutCurrentSession();
     router.push("/");
   };
@@ -111,18 +111,22 @@ export default function DashboardPage() {
                   </button>
                 </div>
               )}
-              <div className="text-center mt-8">
+              <div className="flex justify-center gap-4 mt-6 flex-wrap">
+                <button
+                  onClick={() => router.push("/sessions")}
+                  className="px-5 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-xl shadow cursor-pointer"
+                >
+                  Active Sessions
+                </button>
                 <button
                   onClick={handleLogout}
-                  className="mt-6 px-6 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl shadow cursor-pointer"
+                  className="px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl shadow cursor-pointer"
                 >
                   Logout
                 </button>
-              </div>
-              <div className="text-center mt-4">
                 <button
                   onClick={handleDeleteAccount}
-                  className="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-xl shadow cursor-pointer"
+                  className="px-5 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-xl shadow cursor-pointer"
                 >
                   Delete Account
                 </button>

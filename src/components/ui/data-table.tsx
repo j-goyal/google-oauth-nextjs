@@ -77,7 +77,7 @@ export function DataTable<TData, TValue>({
           <TableBody>
             {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
+                <TableRow key={row.id} >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">
                       {flexRender(
@@ -101,7 +101,7 @@ export function DataTable<TData, TValue>({
 
       <div className="flex flex-col sm:flex-row justify-between items-center p-4 gap-4 sm:gap-0">
         <div className="text-sm text-gray-600">
-          Showing {from}–{to} of {data.length} users
+          Showing {from}–{to} of {data.length} results
         </div>
 
         <div className="flex items-center gap-4">
