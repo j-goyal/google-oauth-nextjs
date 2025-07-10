@@ -9,7 +9,7 @@ export default function Header() {
   const { userLogged } = useAuthStore();
 
   return (
-    <header className="bg-white shadow-md top-0 w-full sticky z-50">
+    <header className="bg-white shadow-md top-0 w-full sticky z-40">
       <div className="max-w-7xl mx-auto px-3 py-3 flex justify-between items-center">
         <Link href="/" className="text-xl font-bold text-indigo-600">
           GoogleOAuth
