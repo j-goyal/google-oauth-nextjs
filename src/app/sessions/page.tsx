@@ -10,6 +10,7 @@ import { getErrorMessage } from "@/utils/getErrorMessage";
 import { ManageMe } from "@/services/ManageMe.module";
 import { SessionDto } from "@/types/sessions/SessionDto";
 import AuthLayout from "@/components/AuthLayout";
+import GridShimmer from "@/components/shimmer/GridShimmer";
 
 export default function ActiveSessionsPage() {
   const [sessions, setSessions] = useState<SessionDto[]>([]);
@@ -121,20 +122,24 @@ export default function ActiveSessionsPage() {
     []
   );
 
+  const columnHeaders: string[] = columns.map((col) =>
+    typeof col.header === "string" ? col.header : String(col.header)
+  );
+
   return (
-    <AuthLayout>
-      <div className="min-h-screen flex flex-col bg-gradient-to-br from-indigo-100 via-pink-100 to-yellow-100">
-        <Header />
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-indigo-100 via-pink-100 to-yellow-100">
+      <Header />
+      <AuthLayout skeleton={<GridShimmer columns={columnHeaders} />}>
         <main className="flex-1 py-5 px-4">
           <div className="max-w-5xl mx-auto space-y-6">
             <h1 className="text-2xl font-bold text-gray-800">
               Active Sessions
             </h1>
-            <DataTable columns={columns} data={sessions}  />
+            <DataTable columns={columns} data={sessions} />
           </div>
         </main>
-        <Footer />
-      </div>
-    </AuthLayout>
+      </AuthLayout>
+      <Footer />
+    </div>
   );
 }

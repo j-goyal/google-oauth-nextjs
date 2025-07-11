@@ -84,12 +84,17 @@ export default function GoogleCallbackPage() {
   return (
     <>
       <Header />
-      <div className="flex flex-col min-h-screen items-center justify-center bg-gradient-to-br from-indigo-100 via-pink-100 to-yellow-100">
-        <div className="text-center text-indigo-700 text-xl font-semibold">
-          Processing Google login...
+      <div className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 via-pink-100 to-yellow-100">
+        <div className="z-10 backdrop-blur-md bg-white/60 border border-white/30 rounded-2xl shadow-lg px-6 py-8 max-w-sm w-full text-center space-y-4">
+          <div className="h-8 w-8 mx-auto border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+          <div className="text-lg font-semibold text-indigo-800">
+            Processing Google login...
+          </div>
+          <div className="text-sm text-gray-700">
+            Please wait while we verify your account.
+          </div>
         </div>
       </div>
-
       <ConfirmModal
         isOpen={isRestoreModalOpen}
         title="Restore Deleted Account"

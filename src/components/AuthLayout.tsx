@@ -8,23 +8,25 @@ import { ManageMe } from "@/services/ManageMe.module";
 
 interface Props {
   children: React.ReactNode;
+  skeleton?: React.ReactNode;
 }
 
-export default function AuthLayout({ children }: Props) {
+export default function AuthLayout({ children, skeleton }: Props) {
   const [verified, setVerified] = useState(false);
   const router = useRouter();
   const setUser = useAuthStore((s) => s.setUser);
   const resetUser = useAuthStore((s) => s.resetUser);
-
+  
   const meService = ManageMe();
 
   useEffect(() => {
     const verify = async () => {
       try {
         const storedToken = AxiosMethods.getToken();
-        if(!storedToken){
+        if (!storedToken) {
           resetUser();
-          router.replace("/sign-in")
+          router.replace("/sign-in");
+          return;
         }
         const res = await meService.getCurrentUser();
         if (res.success) {
@@ -42,5 +44,9 @@ export default function AuthLayout({ children }: Props) {
     verify();
   }, []);
 
-  return verified ? <>{children}</> : null;
+  return (
+    <>
+      {verified ? children : skeleton ?? null}
+    </>
+  );
 }

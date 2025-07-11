@@ -16,7 +16,7 @@ export default function AdminOnly({ children }: { children: React.ReactNode }) {
   }, [userLogged, router]);
 
   if (!userLogged || userLogged.role?.toLowerCase() !== USER_ROLES.ADMIN) {
-    return null;
+    return <div className="flex-1" />;
   }
 
   return <>{children}</>;

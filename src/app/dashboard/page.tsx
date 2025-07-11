@@ -10,6 +10,7 @@ import ConfirmModal from "@/components/ConfirmModal";
 import { useState } from "react";
 import { USER_ROLES } from "@/constants/userRoles";
 import { Users } from "lucide-react";
+import DashboardShimmer from "@/components/shimmer/DashboardShimmer";
 
 export default function DashboardPage() {
   const { userLogged, deleteAccount, logoutCurrentSession } = useAuthStore();
@@ -37,10 +38,9 @@ export default function DashboardPage() {
 
   return (
     <>
-      <AuthLayout>
-        <div className="min-h-screen flex flex-col bg-gradient-to-br from-indigo-100 via-pink-100 to-yellow-100">
-          <Header />
-
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-indigo-100 via-pink-100 to-yellow-100">
+        <Header />
+        <AuthLayout skeleton={<DashboardShimmer />}>
           <main className="flex-1 pt-20 pb-10 px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden p-6">
               {/* Header Section */}
@@ -133,10 +133,9 @@ export default function DashboardPage() {
               </div>
             </div>
           </main>
-
-          <Footer />
-        </div>
-      </AuthLayout>
+        </AuthLayout>
+        <Footer />
+      </div>
       <ConfirmModal
         isOpen={isDeleteModalOpen}
         title="Delete Account"

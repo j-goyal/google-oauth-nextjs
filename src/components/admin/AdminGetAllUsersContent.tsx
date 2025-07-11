@@ -7,8 +7,6 @@ import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/ui/data-table";
 import Image from "next/image";
 import { USER_ROLES } from "@/constants/userRoles";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import { UserDto } from "@/types/users/UsersDto";
 import { ManageUsersService } from "@/services/ManageUsers.module";
 import toast from "react-hot-toast";
@@ -128,30 +126,26 @@ export default function AdminAllUsersContent() {
 
   return (
     <>
-      <div className="min-h-screen flex flex-col bg-gradient-to-br from-indigo-100 via-pink-100 to-yellow-100">
-        <Header />
-        <main className="flex-1 py-5 px-4">
-          <div className="max-w-5xl mx-auto space-y-6">
-            <h1 className="text-2xl font-bold text-gray-800">Users List</h1>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Input
-                className="border-1 border-gray-400"
-                placeholder="Search by name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-              <Input
-                className="border-1 border-gray-400"
-                placeholder="Search by email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <DataTable columns={columns} data={users} />
+      <main className="flex-1 py-5 px-4">
+        <div className="max-w-5xl mx-auto space-y-6">
+          <h1 className="text-2xl font-bold text-gray-800">Users List</h1>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Input
+              className="border-1 border-gray-400"
+              placeholder="Search by name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <Input
+              className="border-1 border-gray-400"
+              placeholder="Search by email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
-        </main>
-        <Footer />
-      </div>
+          <DataTable columns={columns} data={users} />
+        </div>
+      </main>
     </>
   );
 }
