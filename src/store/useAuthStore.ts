@@ -19,6 +19,7 @@ interface CurrentUser {
 interface AuthState {
   userLogged: CurrentUser;
   softDeletedUserEmail?: string;
+  isAuthResolved: boolean;
   login: (idToken: string) => Promise<"success" | "softDeleted" | "error">;
   logoutCurrentSession: () => Promise<void>;
   logoutAllSessions: () => Promise<void>;
@@ -47,7 +48,7 @@ export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
       userLogged: initialUserState,
-
+      isAuthResolved: false,
       login: async (
         idToken: string
       ): Promise<"success" | "softDeleted" | "error"> => {
@@ -195,14 +196,17 @@ export const useAuthStore = create<AuthState>()(
 
         try {
           const response = await meService.getCurrentUser();
-          set({ userLogged: { ...response.data, isAuthenticated: true } });
+          set({
+            userLogged: { ...response.data, isAuthenticated: true },
+            isAuthResolved: true,
+          });
         } catch {
           get().resetUser();
         }
       },
 
       resetUser: () => {
-        set({ userLogged: { ...initialUserState } });
+        set({ userLogged: { ...initialUserState }, isAuthResolved: true });
         axios.removeToken();
       },
 

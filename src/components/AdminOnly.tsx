@@ -16,7 +16,11 @@ export default function AdminOnly({ children }: { children: React.ReactNode }) {
   }, [userLogged, router]);
 
   if (!userLogged || userLogged.role?.toLowerCase() !== USER_ROLES.ADMIN) {
-    return <div className="flex-1" />;
+    return (
+    <div className="flex-1 flex items-center justify-center">
+      <div className="h-6 w-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
   }
 
   return <>{children}</>;

@@ -12,7 +12,7 @@ export default function NotFoundPage() {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-indigo-100 via-pink-100 to-yellow-100">
       <Header />
-      <main className="flex-1 flex items-center justify-center px-4 py-10">
+      <main className="flex-1 flex items-center justify-center px-4 py-10 pt-30">
         <div className="bg-white rounded-3xl shadow-xl p-10 max-w-md text-center space-y-6">
           <div className="flex justify-center animate-bounce">
             <Ghost className="h-16 w-16 text-indigo-500 drop-shadow-md" />

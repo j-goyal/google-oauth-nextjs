@@ -130,7 +130,7 @@ export default function ActiveSessionsPage() {
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-indigo-100 via-pink-100 to-yellow-100">
       <Header />
       <AuthLayout skeleton={<GridShimmer columns={columnHeaders} />}>
-        <main className="flex-1 py-5 px-4">
+        <main className="flex-1 py-5 px-4 pt-30">
           <div className="max-w-5xl mx-auto space-y-6">
             <h1 className="text-2xl font-bold text-gray-800">
               Active Sessions

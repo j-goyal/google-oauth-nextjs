@@ -1,6 +1,6 @@
 export default function DashboardShimmer() {
   return (
-    <main className="flex-1 pt-20 pb-10 px-4 sm:px-6 lg:px-8">
+    <main className="flex-1 pt-30 pb-10 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden p-6 animate-pulse">
         {/* Header section */}
         <div className="flex justify-between items-center border-b pb-4 mb-6 flex-wrap gap-4">

@@ -11,15 +11,22 @@ import { useState } from "react";
 import { USER_ROLES } from "@/constants/userRoles";
 import { Users } from "lucide-react";
 import DashboardShimmer from "@/components/shimmer/DashboardShimmer";
+import { useGlobalLoader } from "@/store/useGlobalLoader";
 
 export default function DashboardPage() {
   const { userLogged, deleteAccount, logoutCurrentSession } = useAuthStore();
+  const { showLoader, hideLoader } = useGlobalLoader();
   const router = useRouter();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const handleLogout = async () => {
-    await logoutCurrentSession();
-    router.push("/");
+    showLoader();
+    try {
+      await logoutCurrentSession();
+      router.push("/");
+    } finally {
+      hideLoader();
+    }
   };
 
   const handleDeleteAccount = async () => {
@@ -27,9 +34,14 @@ export default function DashboardPage() {
   };
 
   const confirmDelete = async () => {
-    const res = await deleteAccount();
-    if (res) router.push("/");
-    setIsDeleteModalOpen(false);
+    showLoader();
+    try {
+      const res = await deleteAccount();
+      if (res) router.push("/");
+      setIsDeleteModalOpen(false);
+    } finally {
+      hideLoader();
+    }
   };
 
   const cancelDelete = () => {
@@ -41,7 +53,7 @@ export default function DashboardPage() {
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-indigo-100 via-pink-100 to-yellow-100">
         <Header />
         <AuthLayout skeleton={<DashboardShimmer />}>
-          <main className="flex-1 pt-20 pb-10 px-4 sm:px-6 lg:px-8">
+          <main className="flex-1 pt-30 pb-10 px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden p-6">
               {/* Header Section */}
               <div className="flex justify-between items-center border-b pb-4 mb-6">

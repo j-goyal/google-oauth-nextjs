@@ -1,6 +1,6 @@
 export default function AccessDeniedShimmer() {
   return (
-    <main className="flex-1 flex items-center justify-center px-4 py-10">
+    <main className="flex-1 flex items-center justify-center px-4 py-10 pt-30">
       <div className="bg-white rounded-3xl shadow-xl p-10 w-full max-w-md text-center space-y-6 animate-pulse">
         <div className="flex justify-center">
           <div className="h-16 w-16 bg-gray-200 rounded-full" />

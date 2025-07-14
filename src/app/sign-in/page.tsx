@@ -44,7 +44,7 @@ export default function SignInPage() {
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-purple-100 via-pink-100 to-yellow-100">
       <Header />
-      <main className="flex-1 flex items-center justify-center px-4 py-20">
+      <main className="flex-1 flex items-center justify-center px-4 py-20 pt-30">
         <div className="bg-white/80 backdrop-blur-md p-8 sm:p-10 rounded-3xl shadow-xl w-full max-w-md">
           <h2 className="text-3xl sm:text-4xl font-bold text-indigo-600 mb-2">
             Welcome Back 👋

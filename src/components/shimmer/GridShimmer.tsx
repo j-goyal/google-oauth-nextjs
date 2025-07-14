@@ -22,7 +22,7 @@ export default function GridShimmer({
   };
   const colClass = colClassMap[columns.length] || "grid-cols-3";
   return (
-    <main className="flex-1 py-5 px-4">
+    <main className="flex-1 py-5 px-4 pt-30">
       <div className="max-w-5xl mx-auto space-y-6 animate-pulse">
         <div className="h-8 w-48 bg-gray-300 rounded" />
         {filters > 0 && (

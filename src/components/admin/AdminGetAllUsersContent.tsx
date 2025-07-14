@@ -126,7 +126,7 @@ export default function AdminAllUsersContent() {
 
   return (
     <>
-      <main className="flex-1 py-5 px-4">
+      <main className="flex-1 py-5 px-4 pt-30">
         <div className="max-w-5xl mx-auto space-y-6">
           <h1 className="text-2xl font-bold text-gray-800">Users List</h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

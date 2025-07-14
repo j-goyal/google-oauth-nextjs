@@ -4,16 +4,23 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useGlobalLoader } from "@/store/useGlobalLoader";
 
 export default function ProfileDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const { userLogged, logoutCurrentSession } = useAuthStore();
+  const { showLoader, hideLoader } = useGlobalLoader();
   const router = useRouter();
 
   const handleLogout = async () => {
-    await logoutCurrentSession();
-    router.replace("/");
-    setIsOpen(false);
+    showLoader();
+    try {
+      await logoutCurrentSession();
+      router.replace("/");
+      setIsOpen(false);
+    } finally {
+      hideLoader();
+    }
   };
 
   useEffect(() => {
@@ -107,7 +114,7 @@ export default function ProfileDropdown() {
                   }}
                   className="w-full px-1 py-1 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors cursor-pointer"
                 >
-                  👥 Manage Users
+                  👥 View Users
                 </button>
               )}
             </div>
