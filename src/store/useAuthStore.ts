@@ -6,6 +6,8 @@ import { ManageAuth } from "@/services/ManageAuth.module";
 import { toast } from "react-hot-toast";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import { ManageMe } from "@/services/ManageMe.module";
+import { SessionDto } from "@/types/sessions/SessionDto";
+import { isGloballyHandledError } from "@/utils/isGloballyHandledError";
 
 interface CurrentUser {
   id: string | null;
@@ -23,7 +25,7 @@ interface AuthState {
   login: (idToken: string) => Promise<"success" | "softDeleted" | "error">;
   logoutCurrentSession: () => Promise<void>;
   logoutAllSessions: () => Promise<void>;
-  logoutOtherSessions: () => Promise<void>;
+  logoutOtherSessions: () => Promise<SessionDto | undefined>;
   deleteAccount: () => Promise<boolean>;
   setUser: (userData: Partial<CurrentUser>) => void;
   resetUser: () => void;
@@ -146,7 +148,8 @@ export const useAuthStore = create<AuthState>()(
           await meService.logoutCurrentSession();
           get().resetUser();
           toast.success("Logged out from current session.");
-        } catch {
+        } catch (error: unknown) {
+          if(isGloballyHandledError(error)) return;
           toast.error("Failed to log out.");
         }
       },
@@ -156,16 +159,22 @@ export const useAuthStore = create<AuthState>()(
           await meService.logoutAllSessions();
           get().resetUser();
           toast.success("Logged out from all sessions.");
-        } catch {
+        } catch (error: unknown) {
+          if(isGloballyHandledError(error)) return;
           toast.error("Failed to log out from all sessions.");
         }
       },
 
       logoutOtherSessions: async () => {
         try {
-          await meService.logoutOtherSessions();
-          toast.success("Logged out from all other sessions.");
-        } catch {
+          const response = await meService.logoutOtherSessions();
+          if (response.success) {
+            return response.data;
+          } else {
+            toast.error(getErrorMessage(response.error));
+          }
+        } catch (error: unknown) {
+          if(isGloballyHandledError(error)) return;
           toast.error("Failed to log out from other sessions.");
         }
       },
@@ -177,6 +186,7 @@ export const useAuthStore = create<AuthState>()(
           toast.success("Account deleted successfully");
           return true;
         } catch (err: unknown) {
+          if(isGloballyHandledError(err)) return false;
           toast.error(
             err instanceof Error
               ? err.message

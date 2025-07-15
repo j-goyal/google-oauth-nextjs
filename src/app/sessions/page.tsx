@@ -11,9 +11,23 @@ import { ManageMe } from "@/services/ManageMe.module";
 import { SessionDto } from "@/types/sessions/SessionDto";
 import AuthLayout from "@/components/AuthLayout";
 import GridShimmer from "@/components/shimmer/GridShimmer";
+import ConfirmModal from "@/components/ConfirmModal";
+import { LogOut, UserX } from "lucide-react";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useRouter } from "next/navigation";
+import { useGlobalLoader } from "@/store/useGlobalLoader";
+import { isGloballyHandledError } from "@/utils/isGloballyHandledError";
 
 export default function ActiveSessionsPage() {
   const [sessions, setSessions] = useState<SessionDto[]>([]);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [modalType, setModalType] = useState<
+    "logoutAll" | "logoutOthers" | null
+  >(null);
+  const router = useRouter();
+
+  const { logoutAllSessions, logoutOtherSessions } = useAuthStore();
+  const { showLoader, hideLoader } = useGlobalLoader();
 
   useEffect(() => {
     const meService = ManageMe();
@@ -25,13 +39,39 @@ export default function ActiveSessionsPage() {
         } else {
           toast.error(getErrorMessage(response.error));
         }
-      } catch {
+      } catch (error: unknown) {
+        if (isGloballyHandledError(error)) return;
         toast.error("Failed to load sessions. Please try again later.");
       }
     };
 
     fetchSessions();
   }, []);
+
+  const handleLogoutAll = async () => {
+    showLoader();
+    try {
+      await logoutAllSessions();
+      router.replace("/");
+    } finally {
+      setIsLogoutModalOpen(false);
+      hideLoader();
+    }
+  };
+
+  const handleLogoutOthers = async () => {
+    showLoader();
+    try {
+      const updatedSession = await logoutOtherSessions();
+      if (updatedSession) {
+        setSessions([updatedSession]);
+        toast.success("Logged out from all other sessions.");
+      }
+    } finally {
+      setIsLogoutModalOpen(false);
+      hideLoader();
+    }
+  };
 
   const columns: ColumnDef<SessionDto>[] = useMemo(
     () => [
@@ -127,19 +167,79 @@ export default function ActiveSessionsPage() {
   );
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-indigo-100 via-pink-100 to-yellow-100">
-      <Header />
-      <AuthLayout skeleton={<GridShimmer columns={columnHeaders} />}>
-        <main className="flex-1 py-5 px-4 pt-30">
-          <div className="max-w-5xl mx-auto space-y-6">
-            <h1 className="text-2xl font-bold text-gray-800">
-              Active Sessions
-            </h1>
-            <DataTable columns={columns} data={sessions} />
-          </div>
-        </main>
-      </AuthLayout>
-      <Footer />
-    </div>
+    <>
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-indigo-100 via-pink-100 to-yellow-100">
+        <Header />
+        <AuthLayout
+          skeleton={<GridShimmer buttons={2} columns={columnHeaders} />}
+        >
+          <main className="flex-1 py-5 px-4 pt-30">
+            <div className="max-w-5xl mx-auto space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <h1 className="text-2xl font-bold text-gray-800">
+                  Active Sessions
+                </h1>
+                <div className="flex gap-3 flex-wrap items-center">
+                  <button
+                    disabled={sessions.length <= 1}
+                    onClick={() => {
+                      setModalType("logoutOthers");
+                      setIsLogoutModalOpen(true);
+                    }}
+                    className={`flex items-center gap-2 px-5 py-2 rounded-xl shadow-sm transition-colors duration-200 font-semibold text-sm
+                    ${
+                      sessions.length <= 1
+                        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                        : "bg-yellow-600 hover:bg-yellow-700 text-white cursor-pointer"
+                    }`}
+                  >
+                    <UserX className="w-4 h-4" />
+                    Logout Others
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setModalType("logoutAll");
+                      setIsLogoutModalOpen(true);
+                    }}
+                    className="flex items-center cursor-pointer gap-2 px-5 py-2 rounded-xl shadow-sm transition-colors duration-200 font-semibold text-sm bg-red-500 hover:bg-red-600 text-white"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Logout All
+                  </button>
+                </div>
+              </div>
+
+              <DataTable columns={columns} data={sessions} />
+            </div>
+          </main>
+        </AuthLayout>
+        <Footer />
+      </div>
+      <ConfirmModal
+        isOpen={isLogoutModalOpen}
+        title={
+          modalType === "logoutAll"
+            ? "Logout from all sessions?"
+            : "Logout from other sessions?"
+        }
+        message={
+          modalType === "logoutAll"
+            ? "You’ll be logged out from all devices, including this one."
+            : "You’ll be logged out from every device except this one."
+        }
+        confirmText="Confirm"
+        cancelText="Cancel"
+        onConfirm={() => {
+          if (modalType === "logoutAll") {
+            handleLogoutAll();
+          } else if (modalType === "logoutOthers") {
+            handleLogoutOthers();
+          }
+          setIsLogoutModalOpen(false);
+        }}
+        onCancel={() => setIsLogoutModalOpen(false)}
+      />
+    </>
   );
 }

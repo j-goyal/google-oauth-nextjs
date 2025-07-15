@@ -130,10 +130,10 @@ instance.interceptors.response.use(
         toast.error("Session expired. Please log in again.");
         logoutAndRedirect();
       }
-      return Promise.reject(error);
+      (error as Record<string, unknown>)._handledGlobally = true;
+    } else {
+      hasHandledSessionExpiry = false;
     }
-
-    hasHandledSessionExpiry = false;
     return Promise.reject(error);
   }
 );
