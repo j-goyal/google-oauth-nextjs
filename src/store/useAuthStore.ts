@@ -16,6 +16,7 @@ interface CurrentUser {
   role: string | null;
   profilePic: string | null;
   isAuthenticated: boolean;
+  lastLoginAt?: string | null;
 }
 
 interface AuthState {
@@ -41,6 +42,7 @@ const initialUserState: CurrentUser = {
   role: null,
   profilePic: null,
   isAuthenticated: false,
+  lastLoginAt: null,
 };
 
 const authService = ManageAuth();
@@ -149,7 +151,7 @@ export const useAuthStore = create<AuthState>()(
           get().resetUser();
           toast.success("Logged out from current session.");
         } catch (error: unknown) {
-          if(isGloballyHandledError(error)) return;
+          if (isGloballyHandledError(error)) return;
           toast.error("Failed to log out.");
         }
       },
@@ -160,7 +162,7 @@ export const useAuthStore = create<AuthState>()(
           get().resetUser();
           toast.success("Logged out from all sessions.");
         } catch (error: unknown) {
-          if(isGloballyHandledError(error)) return;
+          if (isGloballyHandledError(error)) return;
           toast.error("Failed to log out from all sessions.");
         }
       },
@@ -174,7 +176,7 @@ export const useAuthStore = create<AuthState>()(
             toast.error(getErrorMessage(response.error));
           }
         } catch (error: unknown) {
-          if(isGloballyHandledError(error)) return;
+          if (isGloballyHandledError(error)) return;
           toast.error("Failed to log out from other sessions.");
         }
       },
@@ -186,7 +188,7 @@ export const useAuthStore = create<AuthState>()(
           toast.success("Account deleted successfully");
           return true;
         } catch (err: unknown) {
-          if(isGloballyHandledError(err)) return false;
+          if (isGloballyHandledError(err)) return false;
           toast.error(
             err instanceof Error
               ? err.message
@@ -206,10 +208,14 @@ export const useAuthStore = create<AuthState>()(
 
         try {
           const response = await meService.getCurrentUser();
-          set({
-            userLogged: { ...response.data, isAuthenticated: true },
+          set((state) => ({
+            userLogged: {
+              ...state.userLogged,
+              ...response.data,
+              isAuthenticated: true,
+            },
             isAuthResolved: true,
-          });
+          }));
         } catch {
           get().resetUser();
         }

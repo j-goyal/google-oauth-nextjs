@@ -76,6 +76,21 @@ export default function ActiveSessionsPage() {
   const columns: ColumnDef<SessionDto>[] = useMemo(
     () => [
       {
+        id: "current",
+        header: "Status",
+        cell: ({ row }) => (
+          <span
+            className={`text-xs font-medium px-2 py-1 rounded-full ${
+              row.original.isCurrent
+                ? "bg-green-100 text-green-700"
+                : "bg-gray-100 text-gray-500"
+            }`}
+          >
+            {row.original.isCurrent ? "This Device" : "Other Session"}
+          </span>
+        ),
+      },
+      {
         id: "deviceInfo",
         header: "Device Info",
         cell: ({ row }) => {
@@ -142,21 +157,6 @@ export default function ActiveSessionsPage() {
             </span>
           );
         },
-      },
-      {
-        id: "current",
-        header: "Status",
-        cell: ({ row }) => (
-          <span
-            className={`text-xs font-medium px-2 py-1 rounded-full ${
-              row.original.isCurrent
-                ? "bg-green-100 text-green-700"
-                : "bg-gray-100 text-gray-500"
-            }`}
-          >
-            {row.original.isCurrent ? "This Device" : "Other Session"}
-          </span>
-        ),
       },
     ],
     []

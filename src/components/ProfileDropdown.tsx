@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useGlobalLoader } from "@/store/useGlobalLoader";
+import { Clock, LayoutGrid, Monitor, Users } from "lucide-react";
 
 export default function ProfileDropdown() {
   const [isOpen, setIsOpen] = useState(false);
@@ -77,9 +78,24 @@ export default function ProfileDropdown() {
                   {userLogged.role}
                 </span>
               </div>
-              <p className="text-xs italic text-gray-500 break-all">
+              <p className="text-xs italic text-gray-600 break-all">
                 {userLogged.email}
               </p>
+              {userLogged.lastLoginAt && (
+                <p className="text-[11px] text-gray-500 flex items-center gap-1">
+                  <Clock className="w-3 h-3" />
+                  Last login:{" "}
+                  {new Date(userLogged.lastLoginAt).toLocaleString("en-IN", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: true,
+                    timeZone: "Asia/Kolkata",
+                  })}
+                </p>
+              )}
             </div>
 
             <hr className="border-t border-gray-200" />
@@ -91,9 +107,10 @@ export default function ProfileDropdown() {
                   router.push("/dashboard");
                   setIsOpen(false);
                 }}
-                className="w-full px-1 py-1 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors cursor-pointer"
+                className="w-full px-1 py-1 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors cursor-pointer flex justify-center items-center gap-2"
               >
-                🧭 Dashboard
+                <LayoutGrid className="w-4 h-4 text-teal-600" />
+                 Dashboard
               </button>
 
               <button
@@ -101,9 +118,10 @@ export default function ProfileDropdown() {
                   router.push("/sessions");
                   setIsOpen(false);
                 }}
-                className="w-full px-1 py-1 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors cursor-pointer"
+                className="w-full px-1 py-1 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors cursor-pointer flex justify-center items-center gap-2"
               >
-                💻 My Sessions
+                <Monitor className="w-4 h-4 text-pink-600" />
+                 My Sessions
               </button>
 
               {userLogged?.role?.toLowerCase() === "admin" && (
@@ -112,9 +130,10 @@ export default function ProfileDropdown() {
                     router.push("/admin/users");
                     setIsOpen(false);
                   }}
-                  className="w-full px-1 py-1 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors cursor-pointer"
+                  className="w-full px-1 py-1 text-sm text-gray-700 rounded-md hover:bg-gray-100 transition-colors cursor-pointer flex justify-center items-center gap-2"
                 >
-                  👥 View Users
+                  <Users className="w-4 h-4 text-indigo-600" />
+                   View Users
                 </button>
               )}
             </div>
