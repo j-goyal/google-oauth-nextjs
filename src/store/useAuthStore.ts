@@ -79,7 +79,7 @@ export const useAuthStore = create<AuthState>()(
 
           set({ userLogged: { ...userData, isAuthenticated: true } });
 
-          toast.success("Successfully logged in with Google !");
+          toast.success("Successfully logged in !");
           return "success";
         } catch (err: unknown) {
           if (isAxiosError(err)) {

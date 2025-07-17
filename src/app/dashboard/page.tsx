@@ -9,7 +9,15 @@ import { useRouter } from "next/navigation";
 import ConfirmModal from "@/components/ConfirmModal";
 import { useState } from "react";
 import { USER_ROLES } from "@/constants/userRoles";
-import { Users } from "lucide-react";
+import {
+  Monitor,
+  Users,
+  LogOut,
+  Trash2,
+  CheckCircle,
+  Clock3,
+  Wrench
+} from "lucide-react";
 import DashboardShimmer from "@/components/shimmer/DashboardShimmer";
 import { useGlobalLoader } from "@/store/useGlobalLoader";
 
@@ -96,17 +104,21 @@ export default function DashboardPage() {
                   Quick Stats
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div className="bg-indigo-50 p-4 rounded-xl shadow text-center">
-                    <p className="text-3xl font-bold text-indigo-600">✔️</p>
-                    <p className="text-sm mt-2 text-gray-600">Signed In</p>
+                  <div className="bg-indigo-50 p-6 rounded-xl shadow-md text-center transform transition-transform duration-200 hover:scale-105">
+                    <CheckCircle className="mx-auto h-8 w-8 text-indigo-600" />
+                    <p className="text-sm mt-2 text-gray-600 font-medium">
+                      Signed In
+                    </p>
                   </div>
-                  <div className="bg-pink-50 p-4 rounded-xl shadow text-center">
-                    <p className="text-3xl font-bold text-pink-600">🕒</p>
-                    <p className="text-sm mt-2 text-gray-600">Session Active</p>
+                  <div className="bg-pink-50 p-6 rounded-xl shadow-md text-center transform transition-transform duration-200 hover:scale-105">
+                    <Clock3 className="mx-auto h-8 w-8 text-pink-600" />
+                    <p className="text-sm mt-2 text-gray-600 font-medium">
+                      Session Active
+                    </p>
                   </div>
-                  <div className="bg-yellow-50 p-4 rounded-xl shadow text-center">
-                    <p className="text-3xl font-bold text-yellow-600">🛠️</p>
-                    <p className="text-sm mt-2 text-gray-600">
+                  <div className="bg-yellow-50 p-6 rounded-xl shadow-md text-center transform transition-transform duration-200 hover:scale-105">
+                    <Wrench className="mx-auto h-8 w-8 text-yellow-600" />
+                    <p className="text-sm mt-2 text-gray-600 font-medium">
                       More Features Soon
                     </p>
                   </div>
@@ -126,20 +138,23 @@ export default function DashboardPage() {
               <div className="flex justify-center gap-4 mt-6 flex-wrap">
                 <button
                   onClick={() => router.push("/sessions")}
-                  className="px-5 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-xl shadow cursor-pointer"
+                  className="flex items-center gap-2 px-5 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-xl shadow-md transition duration-200 cursor-pointer"
                 >
+                  <Monitor className="h-4 w-4" />
                   Active Sessions
                 </button>
                 <button
                   onClick={handleLogout}
-                  className="px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl shadow cursor-pointer"
+                  className="flex items-center gap-2 px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl shadow-md transition duration-200 cursor-pointer"
                 >
+                  <LogOut className="h-4 w-4" />
                   Logout
                 </button>
                 <button
                   onClick={handleDeleteAccount}
-                  className="px-5 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-xl shadow cursor-pointer"
+                  className="flex items-center gap-2 px-5 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-xl shadow-md transition duration-200 cursor-pointer"
                 >
+                  <Trash2 className="h-4 w-4" />
                   Delete Account
                 </button>
               </div>

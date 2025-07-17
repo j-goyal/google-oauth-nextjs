@@ -21,17 +21,16 @@ export default function DashboardShimmer() {
           ))}
         </div>
 
-        {/* Stats Section */}
         <div className="px-4 sm:px-6 py-4">
-          <div className="h-5 bg-gray-300 w-1/3 mb-4 rounded" />
+          <div className="h-5 bg-gray-300 w-32 mb-4 rounded animate-pulse" />
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="bg-gray-100 p-4 rounded-xl shadow text-center"
+                className="bg-gray-100 p-6 rounded-xl shadow-md text-center animate-pulse"
               >
-                <div className="h-8 w-8 bg-gray-300 rounded-full mx-auto mb-2" />
-                <div className="h-3 bg-gray-200 w-3/5 mx-auto rounded" />
+                <div className="h-8 w-8 bg-gray-300 rounded-full mx-auto mb-3" />
+                <div className="h-3 bg-gray-300 w-28 mx-auto rounded" />
               </div>
             ))}
           </div>

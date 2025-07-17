@@ -12,7 +12,7 @@ export default function Header() {
   return (
     <header className="bg-white shadow-md top-0 w-full fixed z-40 h-16">
       <div className="max-w-7xl mx-auto px-3 py-3 flex justify-between items-center">
-        <Link href="/" className="text-xl font-bold text-indigo-600">
+        <Link href="/" className="text-xl font-bold text-indigo-600 hover:text-indigo-700 transition duration-200">
           GoogleOAuth
         </Link>
 

@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-200 py-5 px-4 text-center text-sm">
+    <footer className="bg-white text-gray-700 py-5 px-4 text-center text-sm border-t">
       <div className="max-w-6xl mx-auto space-y-1 sm:space-y-0 sm:flex sm:justify-center sm:gap-2">
         <p>&copy; {new Date().getFullYear()} GoogleOAuth</p>
         <span className="hidden sm:inline">|</span>
