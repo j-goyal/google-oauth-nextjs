@@ -11,6 +11,7 @@ import { UserDto } from "@/types/users/UsersDto";
 import { ManageUsersService } from "@/services/ManageUsers.module";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/utils/getErrorMessage";
+import { motion } from "framer-motion";
 
 export default function AdminAllUsersContent() {
   const [allUsers, setAllUsers] = useState<UserDto[]>([]);
@@ -143,7 +144,13 @@ export default function AdminAllUsersContent() {
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-          <DataTable columns={columns} data={users} />
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <DataTable columns={columns} data={users} />
+          </motion.div>
         </div>
       </main>
     </>

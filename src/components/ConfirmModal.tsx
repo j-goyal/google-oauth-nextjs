@@ -1,12 +1,13 @@
 "use client";
 
 import {
-  Description,
   Dialog,
   DialogPanel,
   DialogTitle,
+  Description,
 } from "@headlessui/react";
-import { Fragment } from "react";
+import { Fragment, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface ConfirmModalProps {
   isOpen: boolean;
@@ -27,31 +28,52 @@ export default function ConfirmModal({
   onConfirm,
   onCancel,
 }: ConfirmModalProps) {
-  return (
-    <Dialog open={isOpen} onClose={onCancel} as={Fragment}>
-      <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-tranparent">
-        <DialogPanel className="bg-white rounded-2xl p-6 w-full max-w-md mx-4 shadow-xl transition-all">
-          <DialogTitle className="text-xl font-semibold text-gray-800 mb-2">
-            {title}
-          </DialogTitle>
-          <Description className="text-gray-600 mb-4">{message}</Description>
+  const cancelRef = useRef(null);
 
-          <div className="flex justify-end gap-4">
-            <button
-              onClick={onCancel}
-              className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-xl transition cursor-pointer"
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <Dialog
+          open={isOpen}
+          onClose={onCancel}
+          as={Fragment}
+          initialFocus={cancelRef}
+        >
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+            <motion.div
+              key="confirm-modal"
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              transition={{ duration: 0.40 }}
+              className="w-full max-w-md px-4"
             >
-              {cancelText}
-            </button>
-            <button
-              onClick={onConfirm}
-              className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl transition cursor-pointer"
-            >
-              {confirmText}
-            </button>
+              <DialogPanel className="bg-white rounded-2xl p-6 shadow-xl transition-all">
+                <DialogTitle className="text-xl font-semibold text-gray-800 mb-2">
+                  {title}
+                </DialogTitle>
+                <Description className="text-gray-600 text-sm mb-6 leading-relaxed">{message}</Description>
+
+                <div className="flex justify-end gap-3">
+                  <button
+                    ref={cancelRef}
+                    onClick={onCancel}
+                    className="px-4 py-2 rounded-xl bg-gray-200 hover:bg-gray-300 text-gray-800 transition cursor-pointer"
+                  >
+                    {cancelText}
+                  </button>
+                  <button
+                    onClick={onConfirm}
+                    className="px-4 py-2 rounded-xl bg-red-500 hover:bg-red-600 text-white transition shadow-sm cursor-pointer"
+                  >
+                    {confirmText}
+                  </button>
+                </div>
+              </DialogPanel>
+            </motion.div>
           </div>
-        </DialogPanel>
-      </div>
-    </Dialog>
+        </Dialog>
+      )}
+    </AnimatePresence>
   );
 }

@@ -39,7 +39,7 @@ export default function DashboardShimmer() {
         {/* Buttons */}
         <div className="flex justify-center gap-4 mt-6 flex-wrap">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-10 w-32 bg-gray-200 rounded-xl" />
+            <div key={i} className="h-10 w-40 bg-gray-200 rounded-xl" />
           ))}
         </div>
       </div>

@@ -216,8 +216,20 @@ export const useAuthStore = create<AuthState>()(
             },
             isAuthResolved: true,
           }));
-        } catch {
-          get().resetUser();
+        } catch (error) {
+          if (isAxiosError(error)) {
+            const status = error.response?.status;
+
+            if (status === 401 || status === 404) {
+              get().resetUser();
+            } else {
+              console.warn("Network/server error during token verification:", error.message);
+              set({ isAuthResolved: true });
+            }
+          } else {
+            console.error("Unexpected error during token verification:", error);
+            set({ isAuthResolved: true });
+          }
         }
       },
 

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
 import AxiosMethods from "@/lib/AxiosMethods";
 import { ManageMe } from "@/services/ManageMe.module";
+import axios from "axios";
 
 interface Props {
   children: React.ReactNode;
@@ -16,7 +17,7 @@ export default function AuthLayout({ children, skeleton }: Props) {
   const router = useRouter();
   const setUser = useAuthStore((s) => s.setUser);
   const resetUser = useAuthStore((s) => s.resetUser);
-  
+
   const meService = ManageMe();
 
   useEffect(() => {
@@ -35,9 +36,23 @@ export default function AuthLayout({ children, skeleton }: Props) {
         } else {
           throw new Error();
         }
-      } catch {
-        resetUser();
-        router.replace("/sign-in");
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          const status = error.response?.status;
+
+          if (status === 401 || status === 404) {
+            resetUser();
+            router.replace("/sign-in");
+            return;
+          }
+          console.warn(
+            "Network/server error during token verification:",
+            error.message
+          );
+        } else {
+          console.error("Unexpected error during auth check:", error);
+        }
+        router.replace("/");
       }
     };
 

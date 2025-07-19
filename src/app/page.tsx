@@ -11,7 +11,7 @@ export default function HomePage() {
   const userLogged = useAuthStore((state) => state.userLogged);
   const isAuthResolved = useAuthStore((state) => state.isAuthResolved);
   return (
-    <div className="flex flex-col min-h-screen relative overflow-hidden bg-gradient-to-br from-indigo-50 to-pink-50">
+    <div className="flex flex-col min-h-screen relative overflow-hidden bg-gradient-to-br from-indigo-100 to-pink-100">
       <Header />
 
       <main className="flex-1 pt-20 relative z-10">
@@ -23,7 +23,7 @@ export default function HomePage() {
               className="text-indigo-600 inline-block"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              transition={{ duration: 0.7, delay: 0.4 }}
             >
               GoogleOAuth
             </motion.span>
@@ -56,7 +56,7 @@ export default function HomePage() {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
               <motion.div
-                className="p-6 rounded-xl bg-indigo-50 shadow-sm hover:shadow-md transition"
+                className="p-6 rounded-xl bg-indigo-100 shadow-sm hover:shadow-md transition"
                 whileHover={{ scale: 1.05 }}
               >
                 <ShieldCheck className="text-indigo-600 w-8 h-8 mb-2 mx-auto" />
@@ -108,7 +108,7 @@ export default function HomePage() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.7 }}
               >
                 <h3 className="text-lg font-semibold text-gray-700 mb-2">
                   1. Sign In with Google
@@ -121,7 +121,7 @@ export default function HomePage() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
+                transition={{ duration: 0.8 }}
               >
                 <h3 className="text-lg font-semibold text-gray-700 mb-2">
                   2. Redirect to Dashboard
@@ -134,7 +134,7 @@ export default function HomePage() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7 }}
+                transition={{ duration: 0.9 }}
               >
                 <h3 className="text-lg font-semibold text-gray-700 mb-2">
                   3. More Features Coming Soon
@@ -168,7 +168,7 @@ export default function HomePage() {
         </section>
 
         {/* FAQ Section */}
-        <section className="bg-indigo-50 py-12 px-6">
+        <section className="bg-indigo-100 py-12 px-6">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
               Frequently Asked Questions

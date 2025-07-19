@@ -17,6 +17,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useRouter } from "next/navigation";
 import { useGlobalLoader } from "@/store/useGlobalLoader";
 import { isGloballyHandledError } from "@/utils/isGloballyHandledError";
+import { motion } from "framer-motion";
 
 export default function ActiveSessionsPage() {
   const [sessions, setSessions] = useState<SessionDto[]>([]);
@@ -180,37 +181,52 @@ export default function ActiveSessionsPage() {
                   Active Sessions
                 </h1>
                 <div className="flex gap-3 flex-wrap items-center">
-                  <button
-                    disabled={sessions.length <= 1}
-                    onClick={() => {
-                      setModalType("logoutOthers");
-                      setIsLogoutModalOpen(true);
-                    }}
-                    className={`flex items-center gap-2 px-5 py-2 rounded-xl shadow-sm transition-colors duration-200 font-semibold text-sm
-                    ${
-                      sessions.length <= 1
-                        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                        : "bg-yellow-600 hover:bg-yellow-700 text-white cursor-pointer"
-                    }`}
-                  >
-                    <UserX className="w-4 h-4" />
-                    Logout Others
-                  </button>
+                  {sessions.length > 1 ? (
+                    <motion.button
+                      whileTap={{ scale: 0.97 }}
+                      whileHover={{ scale: 1.03 }}
+                      onClick={() => {
+                        setModalType("logoutOthers");
+                        setIsLogoutModalOpen(true);
+                      }}
+                      className="flex items-center cursor-pointer gap-2 px-5 py-2 rounded-xl bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-600 text-white shadow-md text-sm font-semibold transition-all duration-200"
+                    >
+                      <UserX className="w-4 h-4" />
+                      Logout Others
+                    </motion.button>
+                  ) 
+                  : (
+                    <button
+                      disabled
+                      className="flex items-center gap-2 px-5 py-2 rounded-xl bg-gray-300 text-gray-500 cursor-not-allowed shadow-sm text-sm font-semibold"
+                    >
+                      <UserX className="w-4 h-4" />
+                      Logout Others
+                    </button>
+                  )}
 
-                  <button
+                  <motion.button
+                    whileTap={{ scale: 0.97 }}
+                    whileHover={{ scale: 1.03 }}
                     onClick={() => {
                       setModalType("logoutAll");
                       setIsLogoutModalOpen(true);
                     }}
-                    className="flex items-center cursor-pointer gap-2 px-5 py-2 rounded-xl shadow-sm transition-colors duration-200 font-semibold text-sm bg-red-500 hover:bg-red-600 text-white"
+                    className="flex items-center cursor-pointer gap-2 px-5 py-2 rounded-xl bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white shadow-md text-sm font-semibold transition-all duration-200"
                   >
                     <LogOut className="w-4 h-4" />
                     Logout All
-                  </button>
+                  </motion.button>
                 </div>
               </div>
 
-              <DataTable columns={columns} data={sessions} />
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                <DataTable columns={columns} data={sessions} />
+              </motion.div>
             </div>
           </main>
         </AuthLayout>
