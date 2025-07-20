@@ -3,6 +3,7 @@ interface GridShimmerProps {
   rowCount?: number;
   filters?: number;
   buttons?: number;
+  showHeader?: boolean;
 }
 
 export default function GridShimmer({
@@ -10,6 +11,7 @@ export default function GridShimmer({
   rowCount = 3,
   filters = 0,
   buttons = 0,
+  showHeader = true,
 }: GridShimmerProps) {
   const rows = Array.from({ length: rowCount });
   const colClassMap: Record<number, string> = {
@@ -21,21 +23,25 @@ export default function GridShimmer({
     6: "grid-cols-6",
     7: "grid-cols-7",
     8: "grid-cols-8",
+    9: "grid-cols-9",
   };
   const colClass = colClassMap[columns.length] || "grid-cols-3";
   return (
-    <main className="flex-1 py-5 px-4 pt-30">
+    <main className={`flex-1 px-4 ${showHeader ? "pt-30 py-5" : ""}`}>
       <div className="max-w-5xl mx-auto space-y-6 animate-pulse">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <div className="h-8 w-48 bg-gray-300 rounded" />
-          {buttons > 0 && (
-            <div className="flex gap-3 flex-wrap">
-              {Array.from({ length: buttons }).map((_, i) => (
-                <div key={i} className="h-9 w-32 bg-gray-200 rounded-xl" />
-              ))}
-            </div>
-          )}
-        </div>
+        {showHeader ? (
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div className="h-8 w-48 bg-gray-300 rounded" />
+            {buttons > 0 && (
+              <div className="flex gap-3 flex-wrap">
+                {Array.from({ length: buttons }).map((_, i) => (
+                  <div key={i} className="h-9 w-32 bg-gray-200 rounded-xl" />
+                ))}
+              </div>
+            )}
+          </div>
+        ) : null}
+
         {filters > 0 && (
           <div
             className={`grid gap-4 grid-cols-1 sm:grid-cols-${Math.min(

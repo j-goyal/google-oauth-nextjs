@@ -12,6 +12,7 @@ import { ManageUsersService } from "@/services/ManageUsers.module";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import { motion } from "framer-motion";
+import UserSessionsModal from "./UserSessionsModal";
 
 export default function AdminAllUsersContent() {
   const [allUsers, setAllUsers] = useState<UserDto[]>([]);
@@ -20,6 +21,15 @@ export default function AdminAllUsersContent() {
   const [email, setEmail] = useState("");
   const [debouncedName] = useDebounce(name, 300);
   const [debouncedEmail] = useDebounce(email, 300);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+
+  const handleViewSessions = (userId: string) => {
+    setSelectedUserId(userId);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedUserId(null);
+  };
 
   useEffect(() => {
     const manageUsersService = ManageUsersService();
@@ -121,6 +131,18 @@ export default function AdminAllUsersContent() {
           );
         },
       },
+      {
+        id: "actions",
+        header: "Actions",
+        cell: ({ row }) => (
+          <button
+            onClick={() => handleViewSessions(row.original.id)}
+            className="cursor-pointer px-3 py-1 text-xs font-medium text-white bg-gradient-to-r from-purple-500 to-indigo-500 rounded-md hover:from-purple-600 hover:to-indigo-600 transition"
+          >
+            View Sessions
+          </button>
+        ),
+      },
     ],
     []
   );
@@ -153,6 +175,11 @@ export default function AdminAllUsersContent() {
           </motion.div>
         </div>
       </main>
+      <UserSessionsModal
+        isOpen={!!selectedUserId}
+        userId={selectedUserId}
+        onClose={handleCloseModal}
+      />
     </>
   );
 }

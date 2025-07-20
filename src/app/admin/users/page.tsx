@@ -11,7 +11,7 @@ export default function AdminUsersPage() {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-indigo-100 via-pink-100 to-yellow-100">
       <Header />
-      <AuthLayout skeleton={<GridShimmer filters={2} rowCount={5} columns={["Name", "Email", "Role", "Created"]} />}>
+      <AuthLayout skeleton={<GridShimmer filters={2} rowCount={5} columns={["Name", "Email", "Role", "Created", "Actions"]} />}>
         <AdminOnly>
           <AdminUsersContent />
         </AdminOnly>
