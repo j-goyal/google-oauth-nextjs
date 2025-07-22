@@ -199,7 +199,7 @@ export default function DashboardPage() {
       <ConfirmModal
         isOpen={isDeleteModalOpen}
         title="Delete Account"
-        message="Are you sure you want to delete your account? This action cannot be undone."
+        message="Want to delete your account? You can still bring it back later — just sign in and confirm the restore."
         confirmText="Delete"
         cancelText="Cancel"
         onConfirm={confirmDelete}
