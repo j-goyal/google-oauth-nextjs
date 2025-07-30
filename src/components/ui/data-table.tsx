@@ -34,7 +34,12 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(() => {
+    if (typeof window !== "undefined" && window.innerWidth < 640) {
+      return 5;
+    }
+    return 10;
+  });
 
   const table = useReactTable({
     data,
@@ -64,7 +69,10 @@ export function DataTable<TData, TValue>({
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} className="text-sm font-semibold text-gray-800 px-6 py-2 border-b border-gray-300">
+                  <TableHead
+                    key={header.id}
+                    className="text-sm font-semibold text-gray-800 px-6 py-2 border-b border-gray-300"
+                  >
                     {flexRender(
                       header.column.columnDef.header,
                       header.getContext()
@@ -77,9 +85,12 @@ export function DataTable<TData, TValue>({
           <TableBody>
             {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} >
+                <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">
+                    <TableCell
+                      key={cell.id}
+                      className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap"
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
