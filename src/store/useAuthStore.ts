@@ -149,7 +149,7 @@ export const useAuthStore = create<AuthState>()(
         try {
           await meService.logoutCurrentSession();
           get().resetUser();
-          toast.success("Logged out from current session.");
+          toast.success("You’ve been logged out.");
         } catch (error: unknown) {
           if (isGloballyHandledError(error)) return;
           toast.error("Failed to log out.");
