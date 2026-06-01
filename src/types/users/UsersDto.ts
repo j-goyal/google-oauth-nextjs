@@ -4,5 +4,6 @@ export interface UserDto {
   email: string;
   role: string;
   profilePic?: string;
+  isDeleted: boolean;
   createdAt?: string;
 }

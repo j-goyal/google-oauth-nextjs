@@ -7,6 +7,8 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useGlobalLoader } from "@/store/useGlobalLoader";
 import { Clock, LayoutGrid, Monitor, Users } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
+import { getRoleBadgeClass, hasAnyRole } from "@/utils/roleUtils";
+import { ADMIN_ROLES } from "@/constants/userRoles";
 
 export default function ProfileDropdown() {
   const [isOpen, setIsOpen] = useState(false);
@@ -76,11 +78,7 @@ export default function ProfileDropdown() {
                 <div className="flex items-center gap-2">
                   <p className="font-medium">{userLogged.name}</p>
                   <span
-                    className={`px-2 py-0.5 text-xs rounded-full ${
-                      userLogged?.role?.toLowerCase() === "admin"
-                        ? "bg-blue-100 text-blue-700"
-                        : "bg-yellow-100 text-yellow-700"
-                    }`}
+                    className={`px-2 py-0.5 text-xs rounded-full ${getRoleBadgeClass(userLogged?.role)}`}
                   >
                     {userLogged.role}
                   </span>
@@ -131,7 +129,7 @@ export default function ProfileDropdown() {
                   My Sessions
                 </button>
 
-                {userLogged?.role?.toLowerCase() === "admin" && (
+                {hasAnyRole(userLogged?.role, ADMIN_ROLES) && (
                   <button
                     onClick={() => {
                       router.push("/admin/users");

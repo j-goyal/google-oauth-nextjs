@@ -6,13 +6,13 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/ui/data-table";
 import Image from "next/image";
-import { USER_ROLES } from "@/constants/userRoles";
 import { UserDto } from "@/types/users/UsersDto";
 import { ManageUsersService } from "@/services/ManageUsers.module";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import { motion } from "framer-motion";
 import UserSessionsModal from "./UserSessionsModal";
+import { getRoleBadgeClass } from "@/utils/roleUtils";
 
 export default function AdminAllUsersContent() {
   const [allUsers, setAllUsers] = useState<UserDto[]>([]);
@@ -95,17 +95,16 @@ export default function AdminAllUsersContent() {
       {
         accessorKey: "role",
         header: "Role",
-        cell: ({ row }) => (
-          <span
-            className={`px-2 py-0.5 text-xs rounded-full ${
-              row.original.role.toLowerCase() === USER_ROLES.ADMIN
-                ? "bg-blue-100 text-blue-700"
-                : "bg-yellow-100 text-yellow-700"
-            }`}
-          >
-            {row.original.role}
-          </span>
-        ),
+        cell: ({ row }) => {
+          const role = row.original.role;
+          return (
+            <span
+              className={`px-2 py-0.5 text-xs rounded-full ${getRoleBadgeClass(role)}`}
+            >
+              {row.original.role}
+            </span>
+          );
+        },
       },
       {
         accessorKey: "createdAt",
@@ -130,6 +129,21 @@ export default function AdminAllUsersContent() {
             </span>
           );
         },
+      },
+      {
+        accessorKey: "isDeleted",
+        header: "Deleted",
+        cell: ({ row }) => (
+          <span
+            className={`px-2 py-0.5 text-xs rounded-full ${
+              row.original.isDeleted
+                ? "bg-red-100 text-red-700"
+                : "bg-green-100 text-green-700"
+            }`}
+          >
+            {row.original.isDeleted ? "Yes" : "No"}
+          </span>
+        ),
       },
       {
         id: "actions",

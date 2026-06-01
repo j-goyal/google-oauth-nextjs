@@ -8,7 +8,7 @@ import AuthLayout from "@/components/AuthLayout";
 import { useRouter } from "next/navigation";
 import ConfirmModal from "@/components/ConfirmModal";
 import { useState } from "react";
-import { USER_ROLES } from "@/constants/userRoles";
+import { ADMIN_ROLES } from "@/constants/userRoles";
 import {
   Monitor,
   Users,
@@ -21,6 +21,7 @@ import {
 import DashboardShimmer from "@/components/shimmer/DashboardShimmer";
 import { useGlobalLoader } from "@/store/useGlobalLoader";
 import { motion } from "framer-motion";
+import { hasAnyRole } from "@/utils/roleUtils";
 
 export default function DashboardPage() {
   const { userLogged, deleteAccount, logoutCurrentSession } = useAuthStore();
@@ -149,7 +150,7 @@ export default function DashboardPage() {
                   </div>
                 </div>
               </div>
-              {userLogged?.role?.toLowerCase() === USER_ROLES.ADMIN && (
+              {hasAnyRole(userLogged?.role, ADMIN_ROLES) && (
                 <div className="mt-6 flex justify-center">
                   <motion.button
                     whileHover={{ scale: 1.05 }}
@@ -164,10 +165,8 @@ export default function DashboardPage() {
                     >
                       <Users className="h-5 w-5 text-white drop-shadow-sm" />
                     </motion.span>
-                    <span className="">
-                      View All Users
-                    </span>
-                    </motion.button>
+                    <span>View All Users</span>
+                  </motion.button>
                 </div>
               )}
 

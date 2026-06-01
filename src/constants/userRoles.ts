@@ -1,4 +1,10 @@
 export const USER_ROLES = {
+    SUPERADMIN: 'superadmin',
     ADMIN: 'admin',
-    MEMBER: 'member'
+    USER: 'user'
 }
+
+export const ADMIN_ROLES = [
+  USER_ROLES.ADMIN,
+  USER_ROLES.SUPERADMIN,
+];

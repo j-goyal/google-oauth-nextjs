@@ -11,34 +11,45 @@ import AccessDeniedShimmer from "@/components/shimmer/AccessDeniedShimmer";
 export default function ForbiddenPage() {
   const router = useRouter();
   return (
-    <>
-      <div className="min-h-screen flex flex-col bg-gradient-to-br from-red-100 via-yellow-100 to-orange-100">
-        <Header />
-        <AuthLayout skeleton={<AccessDeniedShimmer />}>
-          <main className="flex-1 flex items-center justify-center px-4 py-10 pt-30">
-            <div className="bg-white rounded-3xl shadow-xl p-10 max-w-md text-center space-y-6">
-              <div className="flex justify-center">
-                <ShieldAlert className="h-16 w-16 text-red-500" />
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-red-100 via-yellow-100 to-orange-100">
+      <Header />
+      <AuthLayout skeleton={<AccessDeniedShimmer />}>
+        <main className="flex-1 flex items-center justify-center px-4 py-10 pt-30">
+          <div className="bg-white rounded-3xl shadow-xl p-10 max-w-md w-full text-center space-y-6">
+            <div className="text-6xl font-bold text-red-500">403</div>
+            <div className="flex justify-center">
+              <div className="p-4 rounded-full bg-red-50">
+                <ShieldAlert className="h-12 w-12 text-red-500" />
               </div>
-              <h1 className="text-3xl font-bold text-gray-800">
-                Access Denied
-              </h1>
-              <p className="text-gray-600 text-sm">
-                🚫 You do not have permission to view this page. This section is
-                for{" "}
-                <span className="font-medium text-red-600">admins only</span>.
-              </p>
+            </div>
+            <h1 className="text-3xl font-bold text-gray-800">Access Denied</h1>
+            <p className="text-gray-600 text-sm leading-relaxed">
+              🚫 You do not have sufficient permissions to access this page.
+              <br />
+              If you believe this is an error, please contact your
+              administrator.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
+              <Button
+                variant="outline"
+                onClick={() => router.back()}
+                className="cursor-pointer"
+              >
+                Go Back
+              </Button>
+
               <Button
                 onClick={() => router.push("/")}
-                className="mt-4 bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-xl shadow-md"
+                className="bg-red-500 hover:bg-red-600 text-white cursor-pointer"
               >
-                Go to Home
+                Go Home
               </Button>
             </div>
-          </main>
-        </AuthLayout>
-        <Footer />
-      </div>
-    </>
+          </div>
+        </main>
+      </AuthLayout>
+      <Footer />
+    </div>
   );
 }
