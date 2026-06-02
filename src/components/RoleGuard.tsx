@@ -13,11 +13,11 @@ export default function RoleGuard({ children, allowedRoles }: RoleGuardProps) {
   const { userLogged } = useAuthStore();
   const router = useRouter();
 
-  const role = userLogged?.role?.toLowerCase();
+  const role = userLogged?.role;
 
   const isAllowed =
     !!role &&
-    allowedRoles.some((allowedRole) => allowedRole.toLowerCase() === role);
+    allowedRoles.some((allowedRole) => allowedRole === role);
 
   useEffect(() => {
     if (userLogged && !isAllowed) {

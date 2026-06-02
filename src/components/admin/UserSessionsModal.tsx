@@ -11,6 +11,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/ui/data-table";
 import { X } from "lucide-react";
 import GridShimmer from "../shimmer/GridShimmer";
+import { getSessionStatusBadgeClass } from "@/utils/sessionUtils";
 
 interface UserSessionsModalProps {
   isOpen: boolean;
@@ -34,15 +35,7 @@ export default function UserSessionsModal({
       cell: ({ row }) => {
         const status = row.original.status;
         const baseClass = "px-2 py-0.5 text-xs rounded-full";
-        const statusClass =
-          status === "Active"
-            ? "bg-green-100 text-green-700"
-            : status === "Expired"
-            ? "bg-yellow-100 text-yellow-800"
-            : status === "Revoked"
-            ? "bg-red-100 text-red-700"
-            : "bg-gray-200 text-gray-600";
-        return <span className={`${baseClass} ${statusClass}`}>{status}</span>;
+        return <span className={`${baseClass} ${getSessionStatusBadgeClass(status)}`}>{status}</span>;
       },
     },
     {

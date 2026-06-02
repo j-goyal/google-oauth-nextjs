@@ -4,11 +4,11 @@ export const hasAnyRole = (
   userRole: string | null | undefined,
   allowedRoles: string[],
 ) => {
-  return !!userRole && allowedRoles.includes(userRole.toLowerCase());
+  return !!userRole && allowedRoles.includes(userRole);
 };
 
 export const getRoleBadgeClass = (role?: string | null) => {
-  switch (role?.toLowerCase()) {
+  switch (role) {
     case USER_ROLES.SUPERADMIN:
       return "bg-red-100 text-red-700";
     case USER_ROLES.ADMIN:

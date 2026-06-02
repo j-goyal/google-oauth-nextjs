@@ -13,8 +13,12 @@ import { getErrorMessage } from "@/utils/getErrorMessage";
 import { motion } from "framer-motion";
 import UserSessionsModal from "./UserSessionsModal";
 import { getRoleBadgeClass } from "@/utils/roleUtils";
+import { USER_ROLES } from "@/constants/userRoles";
+import { useAuthStore } from "@/store/useAuthStore";
+import UserRoleDropdown from "./UserRoleDropdown";
 
 export default function AdminAllUsersContent() {
+  const { userLogged } = useAuthStore();
   const [allUsers, setAllUsers] = useState<UserDto[]>([]);
   const [users, setUsers] = useState<UserDto[]>([]);
   const [name, setName] = useState("");
@@ -22,13 +26,28 @@ export default function AdminAllUsersContent() {
   const [debouncedName] = useDebounce(name, 300);
   const [debouncedEmail] = useDebounce(email, 300);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
-
+  const isSuperAdmin = userLogged?.role === USER_ROLES.SUPERADMIN;
+  const currentUserId = userLogged?.id;
   const handleViewSessions = (userId: string) => {
     setSelectedUserId(userId);
   };
 
   const handleCloseModal = () => {
     setSelectedUserId(null);
+  };
+
+  const handleRoleUpdated = (userId: string, updatedRole: string) => {
+    setUsers((prev) =>
+      prev.map((user) =>
+        user.id === userId ? { ...user, role: updatedRole } : user,
+      ),
+    );
+
+    setAllUsers((prev) =>
+      prev.map((user) =>
+        user.id === userId ? { ...user, role: updatedRole } : user,
+      ),
+    );
   };
 
   useEffect(() => {
@@ -97,11 +116,22 @@ export default function AdminAllUsersContent() {
         header: "Role",
         cell: ({ row }) => {
           const role = row.original.role;
+          const canEditRole = isSuperAdmin && row.original.id !== currentUserId;
+          if (canEditRole) {
+            return (
+              <UserRoleDropdown
+                userId={row.original.id}
+                currentRole={role}
+                onRoleUpdated={handleRoleUpdated}
+              />
+            );
+          }
+
           return (
             <span
               className={`px-2 py-0.5 text-xs rounded-full ${getRoleBadgeClass(role)}`}
             >
-              {row.original.role}
+              {role}
             </span>
           );
         },
@@ -158,7 +188,7 @@ export default function AdminAllUsersContent() {
         ),
       },
     ],
-    []
+    [currentUserId, isSuperAdmin],
   );
 
   return (

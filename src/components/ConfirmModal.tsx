@@ -17,6 +17,7 @@ interface ConfirmModalProps {
   cancelText?: string;
   onConfirm: () => void;
   onCancel: () => void;
+  confirmButtonClassName?: string;
 }
 
 export default function ConfirmModal({
@@ -27,8 +28,10 @@ export default function ConfirmModal({
   cancelText = "Cancel",
   onConfirm,
   onCancel,
+  confirmButtonClassName,
 }: ConfirmModalProps) {
   const cancelRef = useRef(null);
+  const defaultConfirmButtonClass = "bg-red-500 hover:bg-red-600";
 
   return (
     <AnimatePresence>
@@ -45,14 +48,16 @@ export default function ConfirmModal({
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              transition={{ duration: 0.40 }}
+              transition={{ duration: 0.4 }}
               className="w-full max-w-md px-4"
             >
               <DialogPanel className="bg-white rounded-2xl p-6 shadow-xl transition-all">
                 <DialogTitle className="text-xl font-semibold text-gray-800 mb-2">
                   {title}
                 </DialogTitle>
-                <Description className="text-gray-600 text-sm mb-6 leading-relaxed">{message}</Description>
+                <Description className="text-gray-600 text-sm mb-6 leading-relaxed">
+                  {message}
+                </Description>
 
                 <div className="flex justify-end gap-3">
                   <button
@@ -64,7 +69,9 @@ export default function ConfirmModal({
                   </button>
                   <button
                     onClick={onConfirm}
-                    className="px-4 py-2 rounded-xl bg-red-500 hover:bg-red-600 text-white transition shadow-sm cursor-pointer"
+                    className={`px-4 py-2 rounded-xl text-white transition shadow-sm cursor-pointer ${
+                      confirmButtonClassName ?? defaultConfirmButtonClass
+                    }`}
                   >
                     {confirmText}
                   </button>
