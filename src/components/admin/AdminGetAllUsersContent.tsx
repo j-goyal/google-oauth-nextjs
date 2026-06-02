@@ -28,6 +28,21 @@ export default function AdminAllUsersContent() {
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const isSuperAdmin = userLogged?.role === USER_ROLES.SUPERADMIN;
   const currentUserId = userLogged?.id;
+
+  const fetchUsers = async () => {
+    const manageUsersService = ManageUsersService();
+    try {
+      const response = await manageUsersService.getAllUsers();
+      if (response.success) {
+        setAllUsers(response.data);
+        setUsers(response.data);
+      } else {
+        toast.error(getErrorMessage(response.error));
+      }
+    } catch {
+      toast.error("Error while fetching users. Please contact support");
+    }
+  };
   const handleViewSessions = (userId: string) => {
     setSelectedUserId(userId);
   };
@@ -36,36 +51,11 @@ export default function AdminAllUsersContent() {
     setSelectedUserId(null);
   };
 
-  const handleRoleUpdated = (userId: string, updatedRole: string) => {
-    setUsers((prev) =>
-      prev.map((user) =>
-        user.id === userId ? { ...user, role: updatedRole } : user,
-      ),
-    );
-
-    setAllUsers((prev) =>
-      prev.map((user) =>
-        user.id === userId ? { ...user, role: updatedRole } : user,
-      ),
-    );
+  const handleRoleUpdated = async () => {
+    await fetchUsers();
   };
 
   useEffect(() => {
-    const manageUsersService = ManageUsersService();
-    const fetchUsers = async () => {
-      try {
-        const response = await manageUsersService.getAllUsers();
-        if (response.success) {
-          setAllUsers(response.data);
-          setUsers(response.data);
-        } else {
-          toast.error(getErrorMessage(response.error));
-        }
-      } catch {
-        toast.error("Error while fetching users. Please contact support");
-      }
-    };
-
     fetchUsers();
   }, []);
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 import AppSelect from "@/components/ui/AppSelect";
@@ -14,7 +14,7 @@ import { getRoleBadgeClass } from "@/utils/roleUtils";
 type Props = {
   userId: string;
   currentRole: string;
-  onRoleUpdated: (userId: string, role: string) => void;
+  onRoleUpdated: () => Promise<void>;
 };
 
 export default function UserRoleDropdown({
@@ -26,6 +26,10 @@ export default function UserRoleDropdown({
   const [loading, setLoading] = useState(false);
   const [pendingRole, setPendingRole] = useState<string | null>(null);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+
+  useEffect(() => {
+    setRole(currentRole);
+  }, [currentRole]);
 
   const handleRoleChange = (newRole: string) => {
     if (newRole === role) return;
@@ -46,7 +50,7 @@ export default function UserRoleDropdown({
 
       if (response.success) {
         setRole(pendingRole);
-        onRoleUpdated(userId, pendingRole);
+        await onRoleUpdated();
         toast.success("Role updated successfully");
       } else {
         toast.error(getErrorMessage(response.error));
