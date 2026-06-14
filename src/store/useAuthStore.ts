@@ -9,7 +9,7 @@ import { ManageMe } from "@/services/ManageMe.module";
 import { SessionDto } from "@/types/sessions/SessionDto";
 import { isGloballyHandledError } from "@/utils/isGloballyHandledError";
 
-interface CurrentUser {
+export interface CurrentUser {
   id: string | null;
   name: string | null;
   email: string | null;
@@ -17,6 +17,7 @@ interface CurrentUser {
   profilePic: string | null;
   isAuthenticated: boolean;
   lastLoginAt?: string | null;
+  permissions: string[];
 }
 
 interface AuthState {
@@ -43,6 +44,7 @@ const initialUserState: CurrentUser = {
   profilePic: null,
   isAuthenticated: false,
   lastLoginAt: null,
+  permissions: []
 };
 
 const authService = ManageAuth();

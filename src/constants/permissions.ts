@@ -1,0 +1,4 @@
+export const Permissions = {
+  WORKSPACES_VIEW: "WORKSPACES:VIEW",
+  WORKSPACES_CREATE: "WORKSPACES:CREATE",
+} as const;
