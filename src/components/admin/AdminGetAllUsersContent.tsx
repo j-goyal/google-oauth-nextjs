@@ -16,6 +16,7 @@ import { getRoleBadgeClass } from "@/utils/roleUtils";
 import { USER_ROLES } from "@/constants/userRoles";
 import { useAuthStore } from "@/store/useAuthStore";
 import UserRoleDropdown from "./UserRoleDropdown";
+import { formatDateTime } from "@/utils/dateUtils";
 
 export default function AdminAllUsersContent() {
   const { userLogged } = useAuthStore();
@@ -130,22 +131,9 @@ export default function AdminAllUsersContent() {
         accessorKey: "createdAt",
         header: "Created",
         cell: ({ row }) => {
-          const date = row.original.createdAt
-            ? new Date(row.original.createdAt)
-            : null;
           return (
             <span className="text-sm text-gray-600">
-              {date
-                ? date.toLocaleString("en-IN", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: true,
-                    timeZone: "Asia/Kolkata",
-                  })
-                : "—"}
+              {formatDateTime(row?.original?.createdAt)}
             </span>
           );
         },

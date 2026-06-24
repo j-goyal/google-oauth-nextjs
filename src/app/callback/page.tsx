@@ -7,9 +7,11 @@ import ConfirmModal from "@/components/ConfirmModal";
 import toast from "react-hot-toast";
 import Header from "@/components/Header";
 import { useGlobalLoader } from "@/store/useGlobalLoader";
+import { ManageWorkspaces } from "@/services/ManageWorkspaces.module";
 
 export default function GoogleCallbackPage() {
   const router = useRouter();
+  const manageWorkspaces = ManageWorkspaces();
 
   const {
     login,
@@ -45,7 +47,30 @@ export default function GoogleCallbackPage() {
       try {
         const result = await login(token);
         if (result === "success") {
-          router.replace("/dashboard");
+          const pendingJoinCode = sessionStorage.getItem("pendingJoinCode");
+
+          if (pendingJoinCode) {
+            sessionStorage.removeItem("pendingJoinCode");
+
+            const response =
+              await manageWorkspaces.joinWorkspace(pendingJoinCode);
+
+            if (response?.success && response?.data) {
+              if (response?.data?.alreadyMember) {
+                toast.success("You are already a member of this workspace.");
+              } else {
+                toast.success("Joined workspace successfully.");
+              }
+              router.replace(`/workspaces/${response?.data?.workspaceId}`);
+            } else {
+              toast.error(
+                response.error?.message ?? "Unable to join workspace.",
+              );
+              router.replace("/dashboard");
+            }
+          } else {
+            router.replace("/dashboard");
+          }
         } else if (result === "error") {
           router.replace("/sign-in");
         }

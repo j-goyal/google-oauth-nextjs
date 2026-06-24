@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useAuthStore } from "@/store/useAuthStore";
-import ProfileDropdown from "@/components/ProfileDropdown";
+import ProfileDropdown from "@/components/profile/ProfileDropdown";
 import SignInButton from "@/components/SignInButton";
 import HeaderShimmer from "./shimmer/HeaderShimmer";
 

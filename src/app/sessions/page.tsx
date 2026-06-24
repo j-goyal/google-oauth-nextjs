@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation";
 import { useGlobalLoader } from "@/store/useGlobalLoader";
 import { isGloballyHandledError } from "@/utils/isGloballyHandledError";
 import { motion } from "framer-motion";
+import { formatDateTime } from "@/utils/dateUtils";
 
 export default function ActiveSessionsPage() {
   const [sessions, setSessions] = useState<SessionDto[]>([]);
@@ -119,18 +120,9 @@ export default function ActiveSessionsPage() {
         accessorKey: "createdAt",
         header: "Created At",
         cell: ({ row }) => {
-          const date = new Date(row.original.createdAt);
           return (
             <span className="text-sm text-gray-600">
-              {date.toLocaleString("en-IN", {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: true,
-                timeZone: "Asia/Kolkata",
-              })}
+              {formatDateTime(row?.original?.createdAt)}
             </span>
           );
         },
@@ -139,22 +131,9 @@ export default function ActiveSessionsPage() {
         accessorKey: "lastUsed",
         header: "Last Used",
         cell: ({ row }) => {
-          const date = row.original.lastUsed
-            ? new Date(row.original.lastUsed)
-            : null;
           return (
             <span className="text-sm text-gray-600">
-              {date
-                ? date.toLocaleString("en-IN", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: true,
-                    timeZone: "Asia/Kolkata",
-                  })
-                : "—"}
+              {formatDateTime(row?.original?.lastUsed)}
             </span>
           );
         },

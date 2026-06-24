@@ -1,46 +1,96 @@
+"use client";
+
 export default function DashboardShimmer() {
   return (
-    <main className="flex-1 pt-30 pb-10 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden p-6 animate-pulse">
-        {/* Header section */}
-        <div className="flex justify-between items-center border-b pb-4 mb-6 flex-wrap gap-4">
-          <div className="flex-1">
-            <div className="h-6 bg-gray-300 rounded w-3/4 mb-2" />
-            <div className="h-4 bg-gray-200 rounded w-full" />
+    <main className="flex-1 pt-30 pb-10 px-4 animate-pulse">
+      <div className="max-w-5xl mx-auto space-y-6">
+        {/* Dashboard Header */}
+        <div className="bg-white rounded-3xl shadow-xl p-8">
+          <div className="h-9 w-28 rounded-full bg-indigo-50" />
+
+          <div className="mt-5 h-9 w-80 rounded bg-gray-200" />
+
+          <div className="mt-4 h-4 w-96 rounded bg-gray-100" />
+        </div>
+
+        {/* Account Overview */}
+        <div className="bg-white rounded-2xl shadow-xl p-6">
+          <div className="mb-6">
+            <div className="h-7 w-52 rounded bg-gray-200" />
+
+            <div className="mt-3 h-4 w-56 rounded bg-gray-100" />
           </div>
-          <div className="w-16 h-16 rounded-full bg-gray-200" />
-        </div>
 
-        {/* Info Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 p-4 sm:p-6 text-center">
-          {[1, 2].map((i) => (
-            <div key={i} className="p-5 rounded-xl bg-gray-100 shadow-md">
-              <div className="h-4 bg-gray-300 w-1/2 mx-auto mb-2 rounded" />
-              <div className="h-4 bg-gray-200 w-3/4 mx-auto rounded" />
-            </div>
-          ))}
-        </div>
-
-        <div className="px-4 sm:px-6 py-4">
-          <div className="h-5 bg-gray-300 w-32 mb-4 rounded animate-pulse" />
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {[1, 2, 3].map((i) => (
+          <div className="grid gap-5 sm:grid-cols-2">
+            {[1, 2, 3, 4].map((item) => (
               <div
-                key={i}
-                className="bg-gray-100 p-6 rounded-xl shadow-md text-center animate-pulse"
+                key={item}
+                className="rounded-2xl border border-gray-100 bg-gray-50 p-5"
               >
-                <div className="h-8 w-8 bg-gray-300 rounded-full mx-auto mb-3" />
-                <div className="h-3 bg-gray-300 w-28 mx-auto rounded" />
+                <div className="flex items-start gap-4">
+                  <div className="h-11 w-11 rounded-2xl bg-gray-200 shrink-0" />
+
+                  <div className="flex-1">
+                    <div className="h-4 w-20 rounded bg-gray-200" />
+
+                    <div className="mt-3 h-5 w-36 rounded bg-gray-100" />
+                  </div>
+                </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Buttons */}
-        <div className="flex justify-center gap-4 mt-6 flex-wrap">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="h-10 w-40 bg-gray-200 rounded-xl" />
-          ))}
+        {/* Modules */}
+        <div>
+          <div className="mb-5">
+            <div className="h-7 w-28 rounded bg-gray-200" />
+
+            <div className="mt-3 h-4 w-48 rounded bg-gray-100" />
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2">
+            {[1, 2, 3].map((item) => (
+              <div key={item} className="bg-white rounded-2xl shadow-xl p-6">
+                <div className="flex items-center gap-4">
+                  <div className="h-12 w-12 rounded-2xl bg-gray-200 shrink-0" />
+
+                  <div className="flex-1">
+                    <div className="h-5 w-28 rounded bg-gray-200" />
+
+                    <div className="mt-3 h-4 w-48 rounded bg-gray-100" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Danger Zone */}
+        <div className="bg-white rounded-2xl shadow-xl p-6">
+          <div className="mb-6">
+            <div className="h-7 w-40 rounded bg-gray-200" />
+
+            <div className="mt-3 h-4 w-52 rounded bg-gray-100" />
+          </div>
+
+          <div className="rounded-2xl border border-gray-100 bg-gray-50 p-5">
+            <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+              <div className="flex gap-4">
+                <div className="h-12 w-12 rounded-2xl bg-gray-200 shrink-0" />
+
+                <div>
+                  <div className="h-5 w-32 rounded bg-gray-200" />
+
+                  <div className="mt-3 h-4 w-72 rounded bg-gray-100" />
+
+                  <div className="mt-2 h-4 w-56 rounded bg-gray-100" />
+                </div>
+              </div>
+
+              <div className="h-10 w-36 rounded-xl bg-gray-200" />
+            </div>
+          </div>
         </div>
       </div>
     </main>

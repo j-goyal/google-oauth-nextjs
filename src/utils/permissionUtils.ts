@@ -1,3 +1,4 @@
+import { USER_ROLES } from "@/constants/userRoles";
 import { CurrentUser } from "@/store/useAuthStore";
 
 export function hasFeature(
@@ -20,6 +21,7 @@ export function hasPermission(
   if (!user) {
     return false;
   }
+  if (user.role === USER_ROLES.SUPERADMIN) return true;
 
   return user.permissions.includes(permission);
 }

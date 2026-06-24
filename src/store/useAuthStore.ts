@@ -44,7 +44,7 @@ const initialUserState: CurrentUser = {
   profilePic: null,
   isAuthenticated: false,
   lastLoginAt: null,
-  permissions: []
+  permissions: [],
 };
 
 const authService = ManageAuth();
@@ -56,7 +56,7 @@ export const useAuthStore = create<AuthState>()(
       userLogged: initialUserState,
       isAuthResolved: false,
       login: async (
-        idToken: string
+        idToken: string,
       ): Promise<"success" | "softDeleted" | "error"> => {
         try {
           const response = await authService.loginWithGoogle({ idToken });
@@ -76,10 +76,13 @@ export const useAuthStore = create<AuthState>()(
             token,
             tokenExpiresAt,
             encryptedRefreshToken,
-            refreshTokenExpiresAt
+            refreshTokenExpiresAt,
           );
 
-          set({ userLogged: { ...userData, isAuthenticated: true } });
+          set({
+            userLogged: { ...userData, isAuthenticated: true },
+            isAuthResolved: true,
+          });
 
           toast.success("Successfully logged in !");
           return "success";
@@ -130,11 +133,12 @@ export const useAuthStore = create<AuthState>()(
             token,
             tokenExpiresAt,
             encryptedRefreshToken,
-            refreshTokenExpiresAt
+            refreshTokenExpiresAt,
           );
           set({
             userLogged: { ...userData, isAuthenticated: true },
             softDeletedUserEmail: undefined,
+            isAuthResolved: true,
           });
 
           toast.success("Account restored successfully and logged in.");
@@ -144,6 +148,7 @@ export const useAuthStore = create<AuthState>()(
           } else {
             toast.error("Something went wrong while restoring account.");
           }
+          
         }
       },
 
@@ -194,7 +199,7 @@ export const useAuthStore = create<AuthState>()(
           toast.error(
             err instanceof Error
               ? err.message
-              : "Something went wrong while deleting the account."
+              : "Something went wrong while deleting the account.",
           );
           return false;
         }
@@ -225,7 +230,10 @@ export const useAuthStore = create<AuthState>()(
             if (status === 401 || status === 404) {
               get().resetUser();
             } else {
-              console.warn("Network/server error during token verification:", error.message);
+              console.warn(
+                "Network/server error during token verification:",
+                error.message,
+              );
               set({ isAuthResolved: true });
             }
           } else {
@@ -254,6 +262,6 @@ export const useAuthStore = create<AuthState>()(
       partialize: (state) => ({
         userLogged: state.userLogged,
       }),
-    }
-  )
+    },
+  ),
 );

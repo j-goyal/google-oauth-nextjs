@@ -12,6 +12,7 @@ import { DataTable } from "@/components/ui/data-table";
 import { X } from "lucide-react";
 import GridShimmer from "../shimmer/GridShimmer";
 import { getSessionStatusBadgeClass } from "@/utils/sessionUtils";
+import { formatDateTime } from "@/utils/dateUtils";
 
 interface UserSessionsModalProps {
   isOpen: boolean;
@@ -61,22 +62,22 @@ export default function UserSessionsModal({
     {
       accessorKey: "lastUsed",
       header: "Last Used",
-      cell: ({ row }) => formatDate(row.original.lastUsed?.toString()),
+      cell: ({ row }) => formatDateTime(row.original.lastUsed?.toString()),
     },
     {
       accessorKey: "expiresAt",
       header: "Expires",
-      cell: ({ row }) => formatDate(row.original.expiresAt?.toString()),
+      cell: ({ row }) => formatDateTime(row.original.expiresAt?.toString()),
     },
     {
       accessorKey: "absoluteExpiresAt",
       header: "Absolute Expiry",
-      cell: ({ row }) => formatDate(row.original.absoluteExpiresAt?.toString()),
+      cell: ({ row }) => formatDateTime(row.original.absoluteExpiresAt?.toString()),
     },
     {
       accessorKey: "createdAt",
       header: "Created",
-      cell: ({ row }) => formatDate(row.original.createdAt?.toString()),
+      cell: ({ row }) => formatDateTime(row.original.createdAt?.toString()),
     },
   ];
 
@@ -106,15 +107,6 @@ export default function UserSessionsModal({
 
     fetchSessions();
   }, [userId, isOpen]);
-
-  const formatDate = (dateStr?: string | null) =>
-    dateStr
-      ? new Date(dateStr).toLocaleString("en-IN", {
-          dateStyle: "medium",
-          timeStyle: "short",
-          timeZone: "Asia/Kolkata",
-        })
-      : "—";
 
   return (
     <AnimatePresence>
