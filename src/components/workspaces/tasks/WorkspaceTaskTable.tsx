@@ -66,24 +66,32 @@ export default function WorkspaceTaskTable({
         },
       },
       {
-        accessorKey: "completedByUserName",
+        accessorKey: "completedBy",
         header: "Completed By",
-        cell: ({ row }) => (
-          <div className="flex items-center gap-2 min-w-[150px] max-w-[180px] sm:max-w-none">
-            {row.original.completedByUserProfilePic && (
-              <Image
-                src={row.original.completedByUserProfilePic}
-                alt={row.original.completedByUserName || "-"}
-                width={24}
-                height={24}
-                className="rounded-full"
-              />
-            )}
-            <span className="text-sm text-gray-700">
-              {row.original.completedByUserName || "—"}
-            </span>
-          </div>
-        ),
+        cell: ({ row }) => {
+          const completedBy = row.original.completedBy;
+          return (
+            <div className="flex items-center gap-2 min-w-[150px] max-w-[180px] sm:max-w-none">
+              {completedBy?.profilePic ? (
+                <Image
+                  src={completedBy.profilePic}
+                  alt={completedBy.name}
+                  width={24}
+                  height={24}
+                  className="rounded-full"
+                />
+              ) : completedBy ? (
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-indigo-100 text-[10px] font-semibold text-indigo-600">
+                  {completedBy.name.charAt(0).toUpperCase()}
+                </div>
+              ) : null}
+
+              <span className="text-sm text-gray-700">
+                {completedBy?.name ?? "—"}
+              </span>
+            </div>
+          );
+        },
       },
       {
         id: "actions",

@@ -113,14 +113,24 @@ export default function WorkspaceTaskDetailsDialog({
                       <InfoRow
                         label="Created By"
                         value={
-                          <div className="flex items-center gap-3">
-                            <Avatar
-                              name={task.createdByUserName}
-                              profilePic={task.createdByUserProfilePic}
-                            />
+                          task.createdBy ? (
+                            <div className="flex items-center gap-3">
+                              <Avatar
+                                name={task.createdBy.name}
+                                profilePic={task.createdBy.profilePic}
+                              />
 
-                            <span>{task.createdByUserName}</span>
-                          </div>
+                              <div>
+                                <p>{task.createdBy.name}</p>
+
+                                <p className="text-xs text-gray-500">
+                                  {task.createdBy.email}
+                                </p>
+                              </div>
+                            </div>
+                          ) : (
+                            "Unknown User"
+                          )
                         }
                       />
 
@@ -144,22 +154,27 @@ export default function WorkspaceTaskDetailsDialog({
                       </h3>
 
                       <div className="rounded-2xl border border-emerald-100 bg-emerald-50 px-5">
-
                         <InfoRow
                           label="Completed By"
                           value={
-                            <div className="flex items-center gap-3">
-                              <Avatar
-                                name={task.completedByUserName}
-                                profilePic={
-                                  task.completedByUserProfilePic
-                                }
-                              />
+                            task.completedBy ? (
+                              <div className="flex items-center gap-3">
+                                <Avatar
+                                  name={task.completedBy.name}
+                                  profilePic={task.completedBy.profilePic}
+                                />
 
-                              <span>
-                                {task.completedByUserName}
-                              </span>
-                            </div>
+                                <div>
+                                  <p>{task.completedBy.name}</p>
+
+                                  <p className="text-xs text-gray-500">
+                                    {task.completedBy.email}
+                                  </p>
+                                </div>
+                              </div>
+                            ) : (
+                              "Unknown User"
+                            )
                           }
                         />
 
@@ -172,9 +187,7 @@ export default function WorkspaceTaskDetailsDialog({
                           label="Comment"
                           value={
                             task.completionComment ? (
-                              <span>
-                                {task.completionComment}
-                              </span>
+                              task.completionComment
                             ) : (
                               <span className="italic text-gray-400">
                                 No comment provided.
@@ -186,7 +199,7 @@ export default function WorkspaceTaskDetailsDialog({
                     </div>
                   )}
                 </div>
-
+                
               </DialogPanel>
             </motion.div>
           </div>

@@ -3,15 +3,21 @@
 export default function WorkspaceHeaderShimmer() {
   return (
     <div className="bg-white rounded-2xl shadow-xl p-6 animate-pulse">
-      <div className="space-y-3">
-        {/* Workspace name */}
-        <div className="h-8 w-64 bg-gray-200 rounded-lg" />
+      <div className="space-y-4">
+        {/* Workspace Name */}
+        <div className="h-8 w-72 rounded-lg bg-gray-200" />
 
-        {/* Created + Updated */}
-        <div className="flex flex-wrap gap-6">
-          <div className="h-4 w-40 bg-gray-100 rounded" />
+        {/* Metadata */}
+        <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
+          {[1, 2, 3].map((item) => (
+            <div key={item} className="flex items-center gap-2">
+              {/* Icon */}
+              <div className="h-4 w-4 rounded-full bg-gray-200" />
 
-          <div className="h-4 w-40 bg-gray-100 rounded" />
+              {/* Label + Value */}
+              <div className="h-4 w-40 rounded bg-gray-100" />
+            </div>
+          ))}
         </div>
       </div>
     </div>

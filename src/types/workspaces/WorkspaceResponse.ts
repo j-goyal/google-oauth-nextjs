@@ -1,4 +1,5 @@
 import { WorkspacePermission } from "@/enums/workspaces/workspacePermission";
+import { UserBasicInfoResponse } from "@/types/common/UserBasicInfoResponse";
 
 export interface WorkspaceResponse {
   id: string;
@@ -7,4 +8,5 @@ export interface WorkspaceResponse {
   createdAt: string;
   updatedAt?: string | null;
   permissions: WorkspacePermission[];
+  owner?: UserBasicInfoResponse;
 }

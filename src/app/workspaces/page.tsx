@@ -21,7 +21,7 @@ export default function WorkspacesPage() {
             filters={0}
             rowCount={6}
             buttons={1}
-            columns={["Workspace", "Created", "Actions"]}
+            columns={["Workspace", "Owner", "Created"]}
           />
         }
       >

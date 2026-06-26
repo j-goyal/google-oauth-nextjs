@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { WorkspaceResponse } from "@/types/workspaces/WorkspaceResponse";
 import { formatDateTime } from "@/utils/dateUtils";
 
@@ -22,19 +23,43 @@ export default function WorkspaceInformationCard({
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <div>
           <p className="text-sm font-medium text-gray-500">Workspace Name</p>
 
-          <p className="mt-1 text-gray-800 font-semibold">{workspace.name}</p>
+          <p className="mt-1 font-semibold text-gray-800">{workspace.name}</p>
         </div>
 
         <div>
-          <p className="text-sm font-medium text-gray-500">Workspace ID</p>
+          <p className="text-sm font-medium text-gray-500">Owner</p>
 
-          <p className="mt-1 text-sm font-mono text-gray-700 break-all">
-            {workspace.id}
-          </p>
+          {workspace?.owner ? (
+            <div className="mt-2 flex items-center gap-3">
+              {workspace.owner?.profilePic ? (
+                <Image
+                  src={workspace.owner?.profilePic}
+                  alt={workspace.owner?.name}
+                  width={32}
+                  height={32}
+                  className="rounded-full"
+                />
+              ) : (
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 font-semibold text-indigo-600">
+                  {workspace.owner?.name.charAt(0).toUpperCase()}
+                </div>
+              )}
+
+              <div>
+                <p className="font-medium text-gray-800">
+                  {workspace.owner?.name}
+                </p>
+
+                <p className="text-sm text-gray-500">{workspace.owner?.email}</p>
+              </div>
+            </div>
+          ) : (
+            <p className="mt-1 text-gray-400">—</p>
+          )}
         </div>
 
         <div>
