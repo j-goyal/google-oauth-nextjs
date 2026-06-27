@@ -16,6 +16,7 @@ interface AppSelectProps {
   disabled?: boolean;
   triggerClassName?: string;
   contentClassName?: string;
+  placeholder?: string;
   renderSelectedValue?: (value: string) => ReactNode;
 }
 
@@ -26,6 +27,7 @@ export default function AppSelect({
   disabled = false,
   triggerClassName = "",
   contentClassName = "",
+  placeholder = "Select...",
   renderSelectedValue,
 }: AppSelectProps) {
   return (
@@ -36,7 +38,7 @@ export default function AppSelect({
     >
       <Select.Trigger
         className={`
-          inline-flex items-center justify-center gap-2
+          inline-flex items-center w-full justify-center gap-2
           rounded-md border border-gray-300
           px-3 py-2 text-sm cursor-pointer 
           hover:border-gray-400 transition-all duration-200
@@ -44,7 +46,7 @@ export default function AppSelect({
           ${triggerClassName}
         `}
       >
-        {renderSelectedValue ? renderSelectedValue(value) : <Select.Value />}
+        {renderSelectedValue ? renderSelectedValue(value) : <Select.Value placeholder={placeholder} />}
 
         <Select.Icon>
           <ChevronDown size={12} />

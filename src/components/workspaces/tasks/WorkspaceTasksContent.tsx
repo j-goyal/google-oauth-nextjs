@@ -14,6 +14,9 @@ import { ManageWorkspaceTasks } from "@/services/ManageWorkspaceTasks.module";
 import WorkspacePermissionGuard from "@/components/guards/WorkspacePermissionGuard";
 import { WorkspacePermission } from "@/enums/workspaces/workspacePermission";
 import { useWorkspaceStore } from "@/store/useWorkspaceStore";
+import WorkspaceTaskFilters from "@/components/workspaces/tasks/WorkspaceTaskFilters";
+import { WorkspaceTaskFilters as WorkspaceTaskFiltersType } from "@/types/workspaceTasks/WorkspaceTasksFilters";
+import WorkspaceTaskFiltersShimmer from "@/components/shimmer/workspaceTasks/WorkspaceTaskFiltersShimmer";
 
 interface Props {
   workspaceId: string;
@@ -27,12 +30,13 @@ export default function WorkspaceTasksContent({ workspaceId }: Props) {
   const [loading, setLoading] = useState(true);
   const [selectedTask, setSelectedTask] = useState<WorkspaceTaskResponse | null>(null);
   const [detailsTask, setDetailsTask] = useState<WorkspaceTaskResponse | null>(null);
+  const [filters, setFilters] = useState<WorkspaceTaskFiltersType>({});
 
-  const fetchTasks = async () => {
+  const fetchTasks = async (taskFilters: WorkspaceTaskFiltersType = filters) => {
     try {
       setLoading(true);
 
-      const response = await manageWorkspaceTasks.getTasks(workspaceId);
+      const response = await manageWorkspaceTasks.getTasks(workspaceId, taskFilters);
 
       if (response.success) {
         setTasks(response.data);
@@ -49,6 +53,18 @@ export default function WorkspaceTasksContent({ workspaceId }: Props) {
   useEffect(() => {
     fetchTasks();
   }, [workspaceId]);
+
+  const handleApplyFilters = (newFilters: WorkspaceTaskFiltersType) => {
+    setFilters(newFilters);
+    fetchTasks(newFilters);
+  };
+
+  const handleResetFilters = () => {
+    const resetFilters: WorkspaceTaskFiltersType = {};
+
+    setFilters(resetFilters);
+    fetchTasks(resetFilters);
+  };
 
   const handleCompleteTask = (task: WorkspaceTaskResponse) => {
     setSelectedTask(task);
@@ -84,23 +100,33 @@ export default function WorkspaceTasksContent({ workspaceId }: Props) {
           </WorkspacePermissionGuard>
         </div>
         {loading ? (
-          <GridShimmer
-            showHeader={false}
-            rowCount={4}
-            columns={[
-              "Task Date",
-              "Title",
-              "Status",
-              "Completed By",
-              "Actions",
-            ]}
-          />
+          <>
+            <WorkspaceTaskFiltersShimmer />
+            <GridShimmer
+              showHeader={false}
+              rowCount={4}
+              columns={[
+                "Task Date",
+                "Title",
+                "Status",
+                "Completed By",
+                "Actions",
+              ]}
+            />
+          </>
         ) : (
-          <WorkspaceTaskTable
-            tasks={tasks}
-            onCompleteTask={handleCompleteTask}
-            onViewDetails={handleViewDetails}
-          />
+          <>
+            <WorkspaceTaskFilters
+              filters={filters}
+              onApply={handleApplyFilters}
+              onReset={handleResetFilters}
+            />
+            <WorkspaceTaskTable
+              tasks={tasks}
+              onCompleteTask={handleCompleteTask}
+              onViewDetails={handleViewDetails}
+            />
+          </>
         )}
       </div>
 
