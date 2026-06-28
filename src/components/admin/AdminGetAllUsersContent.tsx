@@ -17,6 +17,7 @@ import { USER_ROLES } from "@/constants/userRoles";
 import { useAuthStore } from "@/store/useAuthStore";
 import UserRoleDropdown from "./UserRoleDropdown";
 import { formatDateTime } from "@/utils/dateUtils";
+import { useRouter } from "next/navigation";
 
 export default function AdminAllUsersContent() {
   const { userLogged } = useAuthStore();
@@ -29,6 +30,7 @@ export default function AdminAllUsersContent() {
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const isSuperAdmin = userLogged?.role === USER_ROLES.SUPERADMIN;
   const currentUserId = userLogged?.id;
+  const router = useRouter();
 
   const fetchUsers = async () => {
     const manageUsersService = ManageUsersService();
@@ -157,12 +159,25 @@ export default function AdminAllUsersContent() {
         id: "actions",
         header: "Actions",
         cell: ({ row }) => (
-          <button
-            onClick={() => handleViewSessions(row.original.id)}
-            className="cursor-pointer px-3 py-1 text-xs font-medium text-white bg-gradient-to-r from-purple-500 to-indigo-500 rounded-md hover:from-purple-600 hover:to-indigo-600 transition"
-          >
-            View Sessions
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => handleViewSessions(row.original.id)}
+              className="cursor-pointer px-3 py-1 text-xs font-medium text-white bg-gradient-to-r from-purple-500 to-indigo-500 rounded-md hover:from-purple-600 hover:to-indigo-600 transition"
+            >
+              Sessions
+            </button>
+
+            {isSuperAdmin && (
+              <button
+                onClick={() =>
+                  router.push(`/admin/users/${row.original.id}/access`)
+                }
+                className="cursor-pointer px-3 py-1 text-xs font-medium text-white bg-gradient-to-r from-purple-500 to-indigo-500 rounded-md hover:from-purple-600 hover:to-indigo-600 transition"
+              >
+                Access
+              </button>
+            )}
+          </div>
         ),
       },
     ],

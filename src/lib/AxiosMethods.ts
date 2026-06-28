@@ -1,3 +1,4 @@
+import { ResponseDto } from "@/types/common/ResponseDto";
 import axios from "./axios";
 
 class AxiosMethods {
@@ -8,7 +9,7 @@ class AxiosMethods {
     refreshTokenExpiresAt?: string
   ) => {
     localStorage.setItem("token", token);
-  
+
     if (tokenExpiresAt) {
       localStorage.setItem("tokenExpiresAt", tokenExpiresAt);
     }
@@ -37,6 +38,15 @@ class AxiosMethods {
     try {
       const response = await axios.get(url);
       return response?.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  getTypedData = async <T>(url: string): Promise<ResponseDto<T>> => {
+    try {
+      const response = await axios.get<ResponseDto<T>>(url);
+      return response.data;
     } catch (error) {
       throw error;
     }
